@@ -76,18 +76,15 @@ Implementation Steps:
 - Implement version-specific request and resource classes
 - Document versioning strategy
 
-### Authentication Options (JWT, Passport, Sanctum)
+### Authentication Options (JWT)
 
-Brief: Flexible authentication options to suit different API requirements, from simple token-based auth to OAuth2.
+Brief: Authentication system using JWT.
 
 Implementation Steps:
 
 - Create modular auth configuration
 - Implement JWT authentication module
-- Implement Passport authentication module
-- Implement Sanctum authentication module
-- Create installation prompts for selecting auth method
-- Document each authentication option
+- Implement Authentication flow (Login, Register, etc.)
 
 ### Query Builder
 
@@ -240,36 +237,6 @@ echo "Creating a new Laravel project..."
 composer create-project laravel/laravel $1
 
 cd $1
-
-# Ask for authentication method
-echo "Select authentication method:"
-echo "1) JWT (tymon/jwt-auth)"
-echo "2) Passport (laravel/passport)"
-echo "3) Sanctum (laravel/sanctum)"
-read -p "Enter your choice (1-3): " auth_choice
-
-case $auth_choice in
-    1)
-        echo "Installing JWT..."
-        composer require tymon/jwt-auth
-        # Copy JWT specific files
-        ;;
-    2)
-        echo "Installing Passport..."
-        composer require laravel/passport
-        # Copy Passport specific files
-        ;;
-    3)
-        echo "Installing Sanctum..."
-        composer require laravel/sanctum
-        # Copy Sanctum specific files
-        ;;
-    *)
-        echo "Invalid choice. Defaulting to Sanctum."
-        composer require laravel/sanctum
-        # Copy Sanctum specific files
-        ;;
-esac
 
 # Ask for role and permission management
 read -p "Do you want to include role and permission management? (y/n): " role_choice
