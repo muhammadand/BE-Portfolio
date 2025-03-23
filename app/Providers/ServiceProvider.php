@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use App\Services\Contracts\BaseServiceInterface;
-use App\Services\Concretes\BaseService;
+use App\Services\Contracts\UserServiceInterface;
+use App\Services\Concretes\UserService;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -15,7 +15,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->app->bind(BaseServiceInterface::class, BaseService::class);
+        // We don't bind BaseServiceInterface to BaseService anymore since BaseService is now abstract
+        
+        // Bind UserServiceInterface to UserService
+        $this->app->bind(UserServiceInterface::class, UserService::class);
     }
 
     /**

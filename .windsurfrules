@@ -33,3 +33,5 @@ app/
 11. Use meaningful method names and comments.
 12. Use meaningful parameter names and comments.
 13. Add documentation for all classes, methods, and functions.
+14. Use PHP 8.3+ features and best practices.
+15. Don't write any logic in controllers.
