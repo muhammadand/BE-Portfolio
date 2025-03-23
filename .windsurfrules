@@ -1,0 +1,35 @@
+1. Follow this directory structure:
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── Api/
+│   │       ├── V1/
+│   │       └── V2/
+│   ├── Requests/
+│   │   └── Api/
+│   ├── Resources/
+│   │   └── Api/
+│   └── Middleware/
+├── Services/
+│   ├── Contracts/
+│   └── Concretes/
+├── Repositories/
+│   ├── Contracts/
+│   └── Concretes/
+├── Models/
+├── Traits/
+└── Providers/
+```
+2. Use Laravel's built-in features and best practices.
+3. Follow Laravel's coding standards and conventions.
+4. Follow SOLID principles.
+5. Use meaningful variable names and comments.
+6. Use meaningful function names and comments.
+7. Use meaningful class names and comments.
+8. Use meaningful file names and comments.
+9. Use meaningful directory names and comments.
+10. Use meaningful namespace names and comments.
+11. Use meaningful method names and comments.
+12. Use meaningful parameter names and comments.
+13. Add documentation for all classes, methods, and functions.
