@@ -13,9 +13,8 @@ class UserService extends BaseService implements UserServiceInterface
     /**
      * UserService constructor.
      */
-    public function __construct(
-        protected readonly UserRepositoryInterface $repository
-    ) {
+    public function __construct(UserRepositoryInterface $repository)
+    {
         parent::__construct($repository);
     }
 

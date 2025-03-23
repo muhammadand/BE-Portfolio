@@ -3,145 +3,79 @@
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ApiResponse
 {
     /**
      * Return a success JSON response.
-     *
-     * @param array|JsonResource|ResourceCollection|LengthAwarePaginator|null $data
-     * @param string|null $message
-     * @param int $code
-     * @return JsonResponse
      */
-    protected function successResponse($data = null, string $message = null, int $code = 200): JsonResponse
+    public function successResponse($data, int $code = Response::HTTP_OK): JsonResponse
     {
-        $response = [
-            'success' => true,
-            'status' => $code,
-        ];
-
-        if ($message) {
-            $response['message'] = $message;
-        }
-
-        if ($data instanceof ResourceCollection && $data->resource instanceof LengthAwarePaginator) {
-            $response['data'] = $data->collection;
-            $response['pagination'] = [
-                'total' => $data->total(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'last_page' => $data->lastPage(),
-                'from' => $data->firstItem(),
-                'to' => $data->lastItem(),
-            ];
-        } elseif ($data instanceof LengthAwarePaginator) {
-            $response['data'] = $data->items();
-            $response['pagination'] = [
-                'total' => $data->total(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'last_page' => $data->lastPage(),
-                'from' => $data->firstItem(),
-                'to' => $data->lastItem(),
-            ];
-        } elseif ($data !== null) {
-            $response['data'] = $data;
-        }
-
-        return response()->json($response, $code);
+        return response()->json(['data' => $data, 'code' => $code], $code);
     }
 
     /**
      * Return an error JSON response.
-     *
-     * @param string $message
-     * @param int $code
-     * @param array|null $errors
-     * @return JsonResponse
      */
-    protected function errorResponse(string $message, int $code = 400, array $errors = null): JsonResponse
+    public function errorResponse($message, int $code): JsonResponse
     {
-        $response = [
-            'success' => false,
-            'status' => $code,
-            'message' => $message,
-        ];
+        return response()->json(['error' => $message, 'code' => $code], $code);
+    }
 
-        if ($errors) {
-            $response['errors'] = $errors;
-        }
-
-        return response()->json($response, $code);
+    /**
+     * Return an error message JSON response with custom header.
+     */
+    public function errorMessage($message, int $code): JsonResponse
+    {
+        return response()->json($message, $code)->header('Content-Type', 'application/json');
     }
 
     /**
      * Return a 201 Created response.
-     *
-     * @param array|JsonResource|null $data
-     * @param string|null $message
-     * @return JsonResponse
      */
-    protected function createdResponse($data = null, string $message = null): JsonResponse
+    public function createdResponse($data): JsonResponse
     {
-        return $this->successResponse($data, $message ?? 'Resource created successfully', 201);
+        return $this->successResponse($data, Response::HTTP_CREATED);
     }
 
     /**
      * Return a 204 No Content response.
-     *
-     * @return JsonResponse
      */
-    protected function noContentResponse(): JsonResponse
+    public function noContentResponse(): JsonResponse
     {
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
      * Return a 404 Not Found response.
-     *
-     * @param string $message
-     * @return JsonResponse
      */
-    protected function notFoundResponse(string $message = 'Resource not found'): JsonResponse
+    public function notFoundResponse($message = 'Resource not found'): JsonResponse
     {
-        return $this->errorResponse($message, 404);
+        return $this->errorResponse($message, Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Return a 403 Forbidden response.
-     *
-     * @param string $message
-     * @return JsonResponse
      */
-    protected function forbiddenResponse(string $message = 'Forbidden'): JsonResponse
+    public function forbiddenResponse($message = 'Forbidden'): JsonResponse
     {
-        return $this->errorResponse($message, 403);
+        return $this->errorResponse($message, Response::HTTP_FORBIDDEN);
     }
 
     /**
      * Return a 401 Unauthorized response.
-     *
-     * @param string $message
-     * @return JsonResponse
      */
-    protected function unauthorizedResponse(string $message = 'Unauthorized'): JsonResponse
+    public function unauthorizedResponse($message = 'Unauthorized'): JsonResponse
     {
-        return $this->errorResponse($message, 401);
+        return $this->errorResponse($message, Response::HTTP_UNAUTHORIZED);
     }
 
     /**
      * Return a 422 Validation Error response.
-     *
-     * @param array $errors
-     * @param string $message
-     * @return JsonResponse
      */
-    protected function validationErrorResponse(array $errors, string $message = 'Validation failed'): JsonResponse
+    public function validationErrorResponse($message = 'Validation failed'): JsonResponse
     {
-        return $this->errorResponse($message, 422, $errors);
+        return $this->errorResponse($message, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
