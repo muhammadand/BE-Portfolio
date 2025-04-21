@@ -13,4 +13,5 @@ interface UserRepositoryInterface extends QueryableRepositoryInterface
      * @return Collection
      */
     public function getUsers(): Collection;
+    public function getActiveUsers(): Collection;
 }

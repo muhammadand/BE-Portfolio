@@ -3,6 +3,7 @@
 namespace App\Services\Concretes;
 
 use App\Repositories\User\Contracts\UserRepositoryInterface;
+use App\Services\Base\Concretes\BaseService;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -15,11 +16,19 @@ class UserService extends BaseService implements UserServiceInterface
     /**
      * UserService constructor.
      *
-     * @param UserRepositoryInterface $repository Repository implementation that extends BaseRepositoryInterface
+     * @param  UserRepositoryInterface  $userRepository
      */
-    public function __construct(protected UserRepositoryInterface $repository)
+    public function __construct(protected UserRepositoryInterface $userRepository)
     {
-        parent::__construct($repository);
+        $this->setRepository($userRepository);
+    }
+
+    /**
+     * Get all users
+     */
+    public function getUsers(): Collection
+    {
+        return $this->repository->getFiltered();
     }
 
     /**
@@ -33,13 +42,13 @@ class UserService extends BaseService implements UserServiceInterface
     /**
      * Get filtered users with pagination
      *
-     * @param Request|null $request
-     * @param int $perPage
+     * @param  Request|null  $request
+     * @param  int  $perPage
      * @return LengthAwarePaginator
      */
     public function getFilteredUsers(?Request $request = null, int $perPage = 15): LengthAwarePaginator
     {
-        return $this->repository->paginateFiltered($request, $perPage);
+        return $this->repository->paginateFiltered($perPage);
     }
 
     /**
@@ -92,8 +101,6 @@ class UserService extends BaseService implements UserServiceInterface
      */
     public function getActiveUsers(): Collection
     {
-        return $this->repository->all()->filter(function ($user) {
-            return $user->active === true;
-        });
+        return $this->userRepository->getActiveUsers();
     }
 }

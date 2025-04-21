@@ -16,11 +16,11 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
      */
     public function query(): QueryBuilder
     {
-        return QueryBuilder::for($this->model)
+        return QueryBuilder::for($this->model())
             ->allowedFilters($this->getAllowedFilters())
             ->allowedSorts($this->getAllowedSorts())
-            ->allowedIncludes($this->getAllowedIncludes())
-            ->allowedFields($this->getAllowedFields());
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
     }
 
     /**

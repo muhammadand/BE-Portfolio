@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\Concretes;
+namespace App\Services\Base\Concretes;
 
 use App\Repositories\Base\Contracts\BaseRepositoryInterface;
-use App\Services\Contracts\BaseServiceInterface;
+use App\Repositories\Base\Contracts\QueryableRepositoryInterface;
+use App\Services\Base\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,18 +12,29 @@ use Illuminate\Pagination\LengthAwarePaginator;
 abstract class BaseService implements BaseServiceInterface
 {
     /**
-     * @var BaseRepositoryInterface
+     * @var QueryableRepositoryInterface
      */
-    protected BaseRepositoryInterface $repository;
+    protected QueryableRepositoryInterface $repository;
+
+    public function setRepository(QueryableRepositoryInterface $repository): QueryableRepositoryInterface
+    {
+        return $this->repository = $repository;
+    }
+
+    public function getRepository(): QueryableRepositoryInterface
+    {
+        return $this->repository;
+    }
 
     /**
-     * BaseService constructor.
+     * Get filtered, sorted, and included resources.
      *
-     * @param BaseRepositoryInterface $repository
+     * @param array $columns
+     * @return Collection
      */
-    public function __construct(BaseRepositoryInterface $repository)
+    public function getFiltered(array $columns = ['*']): Collection
     {
-        $this->repository = $repository;
+        return $this->repository->getFiltered($columns);
     }
 
     /**

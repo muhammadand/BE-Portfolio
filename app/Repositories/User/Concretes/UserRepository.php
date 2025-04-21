@@ -30,6 +30,11 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
         return $this->getFiltered();
     }
 
+    public function getActiveUsers(): Collection
+    {
+        return $this->model->whereNotNull('email_verified_at')->get();
+    }
+
     /**
      * Get allowed filters for this repository.
      *
@@ -73,7 +78,6 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
      */
     public function getAllowedFields(): array
     {
-        // return ['id', 'name', 'email', 'created_at', 'updated_at'];
-        return [];
+        return ['id', 'name', 'email'];
     }
 }

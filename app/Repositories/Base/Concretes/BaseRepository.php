@@ -3,23 +3,49 @@
 namespace App\Repositories\Base\Concretes;
 
 use App\Repositories\Base\Contracts\BaseRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
+use InvalidArgumentException;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
     /**
-     * @var Model
+     * @var Builder|Model|Relation
      */
-    protected Model $model;
+    protected Builder|Model|Relation $model;
 
     /**
      * BaseRepository constructor.
      */
     public function __construct()
     {
-        $this->model = app($this->model());
+        $this->setModel($this->model());
+    }
+
+    /**
+     * Set new model. It can be: bare model, QueryBuilder, Relation,
+     * @param  Model|Builder|Relation|string  $entity
+     * @return void
+     */
+    public function setModel(Model|Builder|Relation|string $entity): void
+    {
+        if (is_a($entity, Model::class) || is_subclass_of($entity, Model::class)) {
+            $this->model = $entity::query();
+        } elseif (
+            is_a($entity, Builder::class)  ||
+            is_subclass_of($entity, Builder::class) ||
+            is_a($entity, Relation::class) ||
+            is_subclass_of($entity, Relation::class)
+        ) {
+            $this->model = $entity;
+        } elseif (is_string($entity)) {
+            $this->model = app($entity)->query();
+        } else {
+            throw new InvalidArgumentException('Invalid entity type');
+        }
     }
 
     /**

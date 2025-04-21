@@ -16,20 +16,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Authentication Routes
-Route::group(['prefix' => 'auth'], function () {
-    Route::post('register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
-    
-    // Protected routes
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('me', [AuthController::class, 'me'])->name('auth.me');
-        Route::post('refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
-        Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
-    });
-});
+Route::name('auth.')
+    ->prefix('auth')
+    ->group(function () {
+        Route::post('register', [AuthController::class, 'register'])->name('register');
+        Route::post('login', [AuthController::class, 'login'])->name('login');
 
-// Users - Protected routes
+        // Protected routes
+        Route::group(['middleware' => 'auth:api'], function () {
+            Route::get('me', [AuthController::class, 'me'])->name('me');
+            Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+            Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        });
+    });
+
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::apiResource('users', UserController::class);
     Route::get('users/active', [UserController::class, 'active'])->name('users.active');
+    Route::apiResource('users', UserController::class)->names('users');
 });
