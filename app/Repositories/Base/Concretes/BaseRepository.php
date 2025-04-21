@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Concretes;
+namespace App\Repositories\Base\Concretes;
 
-use App\Repositories\Contracts\BaseRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
+use App\Repositories\Base\Contracts\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements BaseRepositoryInterface
@@ -21,7 +21,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $this->model = app($this->model());
     }
-    
+
     /**
      * Specify Model class name
      *
@@ -111,7 +111,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $model = $this->findOrFail($id);
         $model->update($data);
-        
+
         return $model->fresh();
     }
 

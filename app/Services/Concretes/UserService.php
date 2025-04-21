@@ -2,18 +2,22 @@
 
 namespace App\Services\Concretes;
 
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\User\Contracts\UserRepositoryInterface;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService extends BaseService implements UserServiceInterface
 {
     /**
      * UserService constructor.
+     *
+     * @param UserRepositoryInterface $repository Repository implementation that extends BaseRepositoryInterface
      */
-    public function __construct(UserRepositoryInterface $repository)
+    public function __construct(protected UserRepositoryInterface $repository)
     {
         parent::__construct($repository);
     }
@@ -25,7 +29,19 @@ class UserService extends BaseService implements UserServiceInterface
     {
         return $this->repository->all();
     }
-    
+
+    /**
+     * Get filtered users with pagination
+     *
+     * @param Request|null $request
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getFilteredUsers(?Request $request = null, int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->paginateFiltered($request, $perPage);
+    }
+
     /**
      * Get user by ID
      */
@@ -37,7 +53,7 @@ class UserService extends BaseService implements UserServiceInterface
             throw new ModelNotFoundException("User not found");
         }
     }
-    
+
     /**
      * Create user
      */
@@ -45,7 +61,7 @@ class UserService extends BaseService implements UserServiceInterface
     {
         return $this->repository->create($data);
     }
-    
+
     /**
      * Update user
      */
@@ -57,7 +73,7 @@ class UserService extends BaseService implements UserServiceInterface
             throw new ModelNotFoundException("User not found");
         }
     }
-    
+
     /**
      * Delete user
      */
@@ -70,7 +86,7 @@ class UserService extends BaseService implements UserServiceInterface
             throw new ModelNotFoundException("User not found");
         }
     }
-    
+
     /**
      * Get active users
      */

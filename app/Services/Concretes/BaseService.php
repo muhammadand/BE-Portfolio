@@ -2,10 +2,10 @@
 
 namespace App\Services\Concretes;
 
-use App\Repositories\Contracts\BaseRepositoryInterface;
+use App\Repositories\Base\Contracts\BaseRepositoryInterface;
 use App\Services\Contracts\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseService implements BaseServiceInterface

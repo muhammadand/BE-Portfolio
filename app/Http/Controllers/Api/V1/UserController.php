@@ -20,11 +20,11 @@ class UserController extends BaseApiController
     ) {}
 
     /**
-     * Display a listing of the users.
+     * Display a listing of the users with filtering, sorting, and pagination.
      */
     public function index(): JsonResponse
     {
-        $users = $this->userService->getAllUsers();
+        $users = $this->userService->getFilteredUsers(request());
         return $this->successResponse(new UserCollection($users));
     }
 

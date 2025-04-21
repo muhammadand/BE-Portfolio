@@ -93,9 +93,8 @@ Brief: Dynamic filtering, sorting, and pagination for API endpoints.
 Implementation Steps:
 
 - Install and configure Spatie Query Builder
-- Implement base query builder functionality
-- Create example endpoint with query builder
-- Document query builder usage
+- Implement base query builder functionality but consider to make it flexible with the repository pattern we have
+- Apply query builder to users endpoint
 
 ### API Documentation
 

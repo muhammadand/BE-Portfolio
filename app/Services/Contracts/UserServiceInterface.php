@@ -4,6 +4,8 @@ namespace App\Services\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface UserServiceInterface extends BaseServiceInterface
 {
@@ -11,6 +13,15 @@ interface UserServiceInterface extends BaseServiceInterface
      * Get all users
      */
     public function getAllUsers(): Collection;
+    
+    /**
+     * Get filtered users with pagination
+     * 
+     * @param Request|null $request
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getFilteredUsers(?Request $request = null, int $perPage = 15): LengthAwarePaginator;
     
     /**
      * Get user by ID

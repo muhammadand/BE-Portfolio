@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories\Contracts;
+namespace App\Repositories\Base\Contracts;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface BaseRepositoryInterface
@@ -15,7 +15,7 @@ interface BaseRepositoryInterface
      * @return Collection
      */
     public function all(array $columns = ['*']): Collection;
-    
+
     /**
      * Get paginated resources
      *
@@ -24,7 +24,7 @@ interface BaseRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator;
-    
+
     /**
      * Find resource by id
      *
@@ -33,7 +33,7 @@ interface BaseRepositoryInterface
      * @return Model|null
      */
     public function find(int $id, array $columns = ['*']): ?Model;
-    
+
     /**
      * Find resource by field
      *
@@ -43,7 +43,7 @@ interface BaseRepositoryInterface
      * @return Model|null
      */
     public function findByField(string $field, mixed $value, array $columns = ['*']): ?Model;
-    
+
     /**
      * Find resource or fail
      *
@@ -52,7 +52,7 @@ interface BaseRepositoryInterface
      * @return Model
      */
     public function findOrFail(int $id, array $columns = ['*']): Model;
-    
+
     /**
      * Create new resource
      *
@@ -60,7 +60,7 @@ interface BaseRepositoryInterface
      * @return Model
      */
     public function create(array $data): Model;
-    
+
     /**
      * Update resource
      *
@@ -69,7 +69,7 @@ interface BaseRepositoryInterface
      * @return Model
      */
     public function update(int $id, array $data): Model;
-    
+
     /**
      * Delete resource
      *
@@ -77,7 +77,7 @@ interface BaseRepositoryInterface
      * @return bool
      */
     public function delete(int $id): bool;
-    
+
     /**
      * Get model instance
      *
