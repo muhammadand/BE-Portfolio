@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\V1\UserStoreRequest;
 use App\Http\Requests\Api\V1\UserUpdateRequest;
-use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +24,7 @@ class UserController extends BaseApiController
     public function index(): JsonResponse
     {
         $users = $this->userService->getFilteredUsers(request());
-        return $this->successResponse(new UserCollection($users));
+        return $this->successResponse(UserResource::collection($users));
     }
 
     /**
@@ -34,7 +33,7 @@ class UserController extends BaseApiController
     public function all(): JsonResponse
     {
         $users = $this->userService->getAllUsers();
-        return $this->successResponse(new UserCollection($users));
+        return $this->successResponse(UserResource::collection($users));
     }
 
     /**
@@ -79,6 +78,6 @@ class UserController extends BaseApiController
     public function active(): JsonResponse
     {
         $users = $this->userService->getActiveUsers();
-        return $this->successResponse(new UserCollection($users));
+        return $this->successResponse(UserResource::collection($users));
     }
 }
