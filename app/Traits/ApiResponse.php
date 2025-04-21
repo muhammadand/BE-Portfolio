@@ -3,16 +3,27 @@
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
 trait ApiResponse
 {
     /**
      * Return a success JSON response.
+     * @param  mixed  $data
+     * @param  int  $code
+     * @return JsonResponse
      */
-    public function successResponse($data, int $code = Response::HTTP_OK): JsonResponse
+    public function successResponse(mixed $data, int $code = Response::HTTP_OK): JsonResponse
     {
-        return response()->json(['data' => $data, 'code' => $code], $code);
+        // Handle the pagination case.
+        if ($data instanceof JsonResource) {
+            // Get the fully transformed data (includes pagination, links, etc.)
+            $resourceData = $data->response()->getData(true);
+            return response()->json($resourceData, $code);
+        }
+
+        return response()->json(['data' => $data], $code);
     }
 
     /**
@@ -20,7 +31,7 @@ trait ApiResponse
      */
     public function errorResponse($message, int $code): JsonResponse
     {
-        return response()->json(['error' => $message, 'code' => $code], $code);
+        return response()->json(['error' => $message], $code);
     }
 
     /**

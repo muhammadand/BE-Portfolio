@@ -63,7 +63,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
      */
     public function all(array $columns = ['*']): Collection
     {
-        return $this->model->all($columns);
+        return $this->model->get($columns);
     }
 
     /**

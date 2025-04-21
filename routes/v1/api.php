@@ -32,5 +32,6 @@ Route::name('auth.')
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('users/active', [UserController::class, 'active'])->name('users.active');
+    Route::get('users/all', [UserController::class, 'all'])->name('users.all');
     Route::apiResource('users', UserController::class)->names('users');
 });
