@@ -8,6 +8,7 @@ use App\Repositories\User\Contracts\UserRepositoryInterface;
 use App\Services\Base\Concretes\BaseService;
 use App\Services\Contracts\AuthServiceInterface;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -52,7 +53,7 @@ class AuthService extends BaseService implements AuthServiceInterface
      */
     public function login(array $credentials): array
     {
-        if (!$token = Auth::attempt($credentials)) {
+        if (! $token = auth()->attempt($credentials)) {
             throw new AuthenticationException('Invalid credentials');
         }
 
@@ -65,10 +66,10 @@ class AuthService extends BaseService implements AuthServiceInterface
     /**
      * Get the authenticated user.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable The authenticated user
+     * @return Authenticatable The authenticated user
      * @throws AuthenticationException If user is not authenticated
      */
-    public function me(): \Illuminate\Contracts\Auth\Authenticatable
+    public function me(): Authenticatable
     {
         $user = Auth::user();
 
@@ -96,7 +97,7 @@ class AuthService extends BaseService implements AuthServiceInterface
 
             return $token;
         } catch (JWTException $e) {
-            throw new AuthenticationException('Failed to refresh token: ' . $e->getMessage());
+            throw new AuthenticationException('Failed to refresh token: '.$e->getMessage());
         }
     }
 
@@ -104,16 +105,11 @@ class AuthService extends BaseService implements AuthServiceInterface
      * Invalidate the token.
      *
      * @return bool
-     * @throws AuthenticationException If logout fails
      */
     public function logout(): bool
     {
-        try {
-            Auth::logout();
-            return true;
-        } catch (JWTException $e) {
-            throw new AuthenticationException('Failed to logout: ' . $e->getMessage());
-        }
+        Auth::logout();
+        return true;
     }
 
     /**
