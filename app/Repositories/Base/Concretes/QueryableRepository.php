@@ -34,7 +34,7 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
      */
     public function paginateFiltered(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
     {
-        $perPage = request()?->input('per_page', $perPage) ?? $perPage;
+        $perPage = request()->input('per_page', $perPage) ?? $perPage;
 
         return $this->query()->paginate($perPage, $columns);
     }
