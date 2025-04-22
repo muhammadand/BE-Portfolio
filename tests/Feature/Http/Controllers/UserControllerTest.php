@@ -2,9 +2,6 @@
 
 use App\Models\User;
 
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
-
 const USER_RESPONSE = [
     'id',
     'name',
@@ -22,7 +19,7 @@ function matchOneUserResponse(User|array $user): array
     ];
 }
 
-it('return users without filters', function () {
+it('returns users without filters', function () {
     User::factory(5)->create();
     $response = authedUser()->getJson('/api/v1/users');
 
@@ -34,7 +31,7 @@ it('return users without filters', function () {
     ]);
 });
 
-it('return users with name filter', function () {
+it('returns users with name filter', function () {
     User::factory()->create(['name' => 'laravel-starter']);
 
     authedUser()->getJson('/api/v1/users?filter[name]=laravel')
@@ -48,7 +45,7 @@ it('return users with name filter', function () {
         ]);
 });
 
-it('return users with email filter', function () {
+it('returns users with email filter', function () {
     User::factory()->create(['email' => 'laravel@starter.com']);
 
     authedUser()->getJson('/api/v1/users?filter[email]=starter')
@@ -62,7 +59,7 @@ it('return users with email filter', function () {
         ]);
 });
 
-it('return 400 bad request when passing wrong filters', function () {
+it('returns 400 bad request when passing wrong filters', function () {
     User::factory()->create(['name' => 'laravel-starter']);
 
     authedUser()->getJson('/api/v1/users?filter[non_existing]=laravel')
@@ -70,7 +67,7 @@ it('return 400 bad request when passing wrong filters', function () {
         ->assertJson(["message" => "Requested filter(s) `non_existing` are not allowed. Allowed filter(s) are `id, name, email`."]);
 });
 
-it('return empty users when no records matches in the DB', function () {
+it('returns empty users when no records matches in the DB', function () {
     User::factory(5)->create();
 
     authedUser()->getJson('/api/v1/users?filter[name]=2454352345435')
@@ -80,7 +77,7 @@ it('return empty users when no records matches in the DB', function () {
         ]);
 });
 
-it('return all users', function () {
+it('returns all users', function () {
     User::factory(5)->create();
     authedUser()->getJson('/api/v1/users/all')
         ->assertStatus(200)
@@ -91,7 +88,7 @@ it('return all users', function () {
         ]);
 });
 
-it('return active users', function () {
+it('returns active users', function () {
     User::factory(5)->create();
 
     authedUser()->getJson('/api/v1/users/active')
@@ -103,7 +100,7 @@ it('return active users', function () {
         ]);
 });
 
-it('return one user', function () {
+it('shows a user by id', function () {
     $user = User::factory(1)->create()->first();
 
     authedUser()->getJson("/api/v1/users/{$user->id}")
@@ -116,13 +113,13 @@ it('return one user', function () {
         ]);
 });
 
-it('return not found if not user exist with the given id', function () {
+it('returns not found if not user exist with the given id', function () {
     authedUser()
         ->getJson("/api/v1/users/352465")
         ->assertNotFound();
 });
 
-it('create new user', function () {
+it('creates new user', function () {
     $user = User::factory()->make()->makeVisible('password');
 
     $response = authedUser()->postJson("/api/v1/users", $user->toArray());
@@ -136,10 +133,10 @@ it('create new user', function () {
             'data' => matchOneUserResponse($createdUser)
         ]);
 
-    assertDatabaseHas('users', ['id' => $createdUser['id']]);
+    $this->assertDatabaseHas('users', ['id' => $createdUser['id']]);
 });
 
-it('return 422 when no user name provided', function () {
+it('returns 422 when no user name provided', function () {
     $user = User::factory()->make(['name' => null])->makeVisible('password');
 
     authedUser()->postJson("/api/v1/users", $user->toArray())
@@ -152,7 +149,7 @@ it('return 422 when no user name provided', function () {
         ]);
 });
 
-it('return 422 when no user email provided', function () {
+it('returns 422 when no user email provided', function () {
     $user = User::factory()->make(['email' => null])->makeVisible('password');
 
     authedUser()->postJson("/api/v1/users", $user->toArray())
@@ -160,7 +157,7 @@ it('return 422 when no user email provided', function () {
         ->assertJsonValidationErrorFor('email');
 });
 
-it('return 422 when no user password provided', function () {
+it('returns 422 when no user password provided', function () {
     $user = User::factory()->make();
 
     authedUser()->postJson("/api/v1/users", $user->toArray())
@@ -168,7 +165,7 @@ it('return 422 when no user password provided', function () {
         ->assertJsonValidationErrorFor('password');
 });
 
-it('update an existing user', function () {
+it('updates an existing user', function () {
     $user = User::factory()->create()->first();
     $user->name = 'laravel-starter-updated';
 
@@ -182,15 +179,15 @@ it('update an existing user', function () {
             'data' => matchOneUserResponse($user)
         ]);
 
-    assertDatabaseHas('users', ['name' => $user['name']]);
+    $this->assertDatabaseHas('users', ['name' => $user['name']]);
 });
 
-it('delete an existing user', function () {
+it('deletes an existing user', function () {
     $user = User::factory()->create()->first();
 
     authedUser()
         ->deleteJson("/api/v1/users/{$user->id}")
         ->assertNoContent();
 
-    assertDatabaseMissing('users', ['id' => $user['id']]);
+    $this->assertDatabaseMissing('users', ['id' => $user['id']]);
 });
