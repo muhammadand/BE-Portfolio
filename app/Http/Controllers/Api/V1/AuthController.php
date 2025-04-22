@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
-use App\Http\Resources\V1\Auth\AuthUserResource;
+use App\Http\Resources\Api\User\UserResource;
 use App\Services\Contracts\AuthServiceInterface;
-use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends Controller
+class AuthController extends BaseApiController
 {
-    use ApiResponse;
-
     /**
      * AuthController constructor.
      */
@@ -26,33 +22,26 @@ class AuthController extends Controller
     /**
      * Register a new user.
      *
-     * @param RegisterRequest $request
+     * @param  RegisterRequest  $request
      * @return JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $token = $this->authService->register($request->validated());
-
-        return $this->successResponse([
-            'token' => $token,
-            'token_type' => 'bearer',
-        ], Response::HTTP_CREATED);
+        $data = $this->authService->register($request->validated());
+        return $this->successResponse($data);
     }
 
     /**
      * Login a user.
      *
-     * @param LoginRequest $request
+     * @param  LoginRequest  $request
      * @return JsonResponse
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $token = $this->authService->login($request->validated());
+        $data = $this->authService->login($request->validated());
 
-        return $this->successResponse([
-            'token' => $token,
-            'token_type' => 'bearer',
-        ]);
+        return $this->successResponse($data);
     }
 
     /**
@@ -63,8 +52,7 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         $user = $this->authService->me();
-
-        return $this->successResponse(new AuthUserResource($user));
+        return $this->successResponse(new UserResource($user));
     }
 
     /**

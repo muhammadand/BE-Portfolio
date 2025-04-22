@@ -2,7 +2,10 @@
 
 namespace App\Services\Concretes;
 
+use App\Http\Resources\Api\User\UserResource;
 use App\Models\User;
+use App\Repositories\User\Contracts\UserRepositoryInterface;
+use App\Services\Base\Concretes\BaseService;
 use App\Services\Contracts\AuthServiceInterface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
@@ -10,45 +13,53 @@ use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class AuthService implements AuthServiceInterface
+class AuthService extends BaseService implements AuthServiceInterface
 {
+    /**
+     * UserService constructor.
+     *
+     * @param  UserRepositoryInterface  $userRepository
+     */
+    public function __construct(protected UserRepositoryInterface $userRepository)
+    {
+        $this->setRepository($userRepository);
+    }
+
     /**
      * Register a new user.
      *
-     * @param array<string, mixed> $data
-     * @return string JWT token
+     * @param  array<string, mixed>  $data
+     * @return array
      */
-    public function register(array $data): string
+    public function register(array $data): array
     {
-        // Create user
-        $user = User::create([
+        /** @var User $user */
+        $user = $this->repository->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
-        // Generate token
-        return JWTAuth::fromUser($user);
+        return $this->prepareUserWithToken($user);
     }
 
     /**
      * Authenticate a user.
      *
-     * @param array<string, mixed> $credentials
-     * @return string JWT token
+     * @param  array<string, mixed>  $credentials
+     * @return array
      * @throws AuthenticationException If authentication fails
      */
-    public function login(array $credentials): string
+    public function login(array $credentials): array
     {
-        try {
-            if (!$token = Auth::attempt($credentials)) {
-                throw new AuthenticationException('Invalid credentials');
-            }
-            
-            return $token;
-        } catch (JWTException $e) {
-            throw new AuthenticationException('Failed to generate token: ' . $e->getMessage());
+        if (!$token = Auth::attempt($credentials)) {
+            throw new AuthenticationException('Invalid credentials');
         }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $this->prepareUserWithToken($user, $token);
     }
 
     /**
@@ -60,11 +71,11 @@ class AuthService implements AuthServiceInterface
     public function me(): \Illuminate\Contracts\Auth\Authenticatable
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             throw new AuthenticationException('User not authenticated');
         }
-        
+
         return $user;
     }
 
@@ -78,11 +89,11 @@ class AuthService implements AuthServiceInterface
     {
         try {
             $token = Auth::refresh();
-            
+
             if (!$token) {
                 throw new AuthenticationException('Failed to refresh token');
             }
-            
+
             return $token;
         } catch (JWTException $e) {
             throw new AuthenticationException('Failed to refresh token: ' . $e->getMessage());
@@ -103,5 +114,19 @@ class AuthService implements AuthServiceInterface
         } catch (JWTException $e) {
             throw new AuthenticationException('Failed to logout: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * @param  User  $user
+     * @param  string|null  $token
+     * @return array
+     */
+    private function prepareUserWithToken(User $user, string $token = null): array
+    {
+        return [
+            'user' => new UserResource($user),
+            'token' => $token ?? JWTAuth::fromUser($user),
+            'token_type' => 'bearer',
+        ];
     }
 }

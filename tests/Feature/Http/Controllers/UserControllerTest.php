@@ -1,32 +1,16 @@
 <?php
 
 use App\Models\User;
-
-const USER_RESPONSE = [
-    'id',
-    'name',
-    'email',
-    'created_at',
-    'updated_at',
-];
-
-function matchOneUserResponse(User|array $user): array
-{
-    return [
-        'id' => $user['id'],
-        'name' => $user['name'],
-        'email' => $user['email']
-    ];
-}
+use Tests\Feature\Utils\UserTestUtils;
 
 it('returns users without filters', function () {
     User::factory(5)->create();
-    $response = authedUser()->getJson('/api/v1/users');
+    $response = authedUser()->getJson(apiRoute('users'));
 
     $response->assertStatus(200);
     $response->assertJsonStructure([
         'data' => [
-            '*' => USER_RESPONSE,
+            '*' => UserTestUtils::userResponse(),
         ],
     ]);
 });
@@ -34,7 +18,7 @@ it('returns users without filters', function () {
 it('returns users with name filter', function () {
     User::factory()->create(['name' => 'laravel-starter']);
 
-    authedUser()->getJson('/api/v1/users?filter[name]=laravel')
+    authedUser()->getJson(apiRoute('users?filter[name]=laravel'))
         ->assertStatus(200)
         ->assertJson([
             'data' => [
@@ -48,7 +32,7 @@ it('returns users with name filter', function () {
 it('returns users with email filter', function () {
     User::factory()->create(['email' => 'laravel@starter.com']);
 
-    authedUser()->getJson('/api/v1/users?filter[email]=starter')
+    authedUser()->getJson(apiRoute('users?filter[email]=starter'))
         ->assertStatus(200)
         ->assertJson([
             'data' => [
@@ -62,7 +46,7 @@ it('returns users with email filter', function () {
 it('returns 400 bad request when passing wrong filters', function () {
     User::factory()->create(['name' => 'laravel-starter']);
 
-    authedUser()->getJson('/api/v1/users?filter[non_existing]=laravel')
+    authedUser()->getJson(apiRoute('users?filter[non_existing]=laravel'))
         ->assertStatus(400)
         ->assertJson(["message" => "Requested filter(s) `non_existing` are not allowed. Allowed filter(s) are `id, name, email`."]);
 });
@@ -70,7 +54,7 @@ it('returns 400 bad request when passing wrong filters', function () {
 it('returns empty users when no records matches in the DB', function () {
     User::factory(5)->create();
 
-    authedUser()->getJson('/api/v1/users?filter[name]=2454352345435')
+    authedUser()->getJson(apiRoute('users?filter[name]=2454352345435'))
         ->assertStatus(200)
         ->assertJson([
             'data' => []
@@ -79,11 +63,11 @@ it('returns empty users when no records matches in the DB', function () {
 
 it('returns all users', function () {
     User::factory(5)->create();
-    authedUser()->getJson('/api/v1/users/all')
+    authedUser()->getJson(apiRoute('users/all'))
         ->assertStatus(200)
         ->assertJsonStructure([
             'data' => [
-                '*' => USER_RESPONSE,
+                '*' => UserTestUtils::userResponse(),
             ],
         ]);
 });
@@ -91,11 +75,11 @@ it('returns all users', function () {
 it('returns active users', function () {
     User::factory(5)->create();
 
-    authedUser()->getJson('/api/v1/users/active')
+    authedUser()->getJson(apiRoute('users/active'))
         ->assertStatus(200)
         ->assertJsonStructure([
             'data' => [
-                '*' => USER_RESPONSE,
+                '*' => UserTestUtils::userResponse(),
             ],
         ]);
 });
@@ -103,13 +87,13 @@ it('returns active users', function () {
 it('shows a user by id', function () {
     $user = User::factory(1)->create()->first();
 
-    authedUser()->getJson("/api/v1/users/{$user->id}")
+    authedUser()->getJson("/api/v1/users/$user->id")
         ->assertStatus(200)
         ->assertJsonStructure([
-            'data' => USER_RESPONSE
+            'data' => UserTestUtils::userResponse()
         ])
         ->assertJson([
-            'data' => matchOneUserResponse($user)
+            'data' => UserTestUtils::matchUserResponse($user)
         ]);
 });
 
@@ -127,10 +111,10 @@ it('creates new user', function () {
 
     $response->assertCreated()
         ->assertJsonStructure([
-            'data' => USER_RESPONSE
+            'data' => UserTestUtils::userResponse()
         ])
         ->assertJson([
-            'data' => matchOneUserResponse($createdUser)
+            'data' => UserTestUtils::matchUserResponse($createdUser)
         ]);
 
     $this->assertDatabaseHas('users', ['id' => $createdUser['id']]);
@@ -170,13 +154,13 @@ it('updates an existing user', function () {
     $user->name = 'laravel-starter-updated';
 
     authedUser()
-        ->putJson("/api/v1/users/{$user->id}", $user->toArray())
+        ->putJson("/api/v1/users/$user->id", $user->toArray())
         ->assertStatus(200)
         ->assertJsonStructure([
-            'data' => USER_RESPONSE
+            'data' => UserTestUtils::userResponse()
         ])
         ->assertJson([
-            'data' => matchOneUserResponse($user)
+            'data' => UserTestUtils::matchUserResponse($user)
         ]);
 
     $this->assertDatabaseHas('users', ['name' => $user['name']]);
@@ -186,7 +170,7 @@ it('deletes an existing user', function () {
     $user = User::factory()->create()->first();
 
     authedUser()
-        ->deleteJson("/api/v1/users/{$user->id}")
+        ->deleteJson("/api/v1/users/$user->id")
         ->assertNoContent();
 
     $this->assertDatabaseMissing('users', ['id' => $user['id']]);

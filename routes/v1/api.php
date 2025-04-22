@@ -25,8 +25,8 @@ Route::name('auth.')
         // Protected routes
         Route::group(['middleware' => 'auth:api'], function () {
             Route::get('me', [AuthController::class, 'me'])->name('me');
-            Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
-            Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+            Route::get('refresh', [AuthController::class, 'refresh'])->name('refresh');
+            Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         });
     });
 

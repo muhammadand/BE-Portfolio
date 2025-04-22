@@ -11,11 +11,12 @@
 |
 */
 
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 pest()->extend(Tests\TestCase::class)
- ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature', 'Unit');
 
 /*
@@ -44,15 +45,22 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function authedUser(): \Illuminate\Foundation\Testing\TestCase
+function authedUser(User $user = null): \Illuminate\Foundation\Testing\TestCase
 {
-    $user = \App\Models\User::query()->firstOrCreate([
-        'name' => fake()->name(),
-        'email' => fake()->unique()->safeEmail(),
-        'email_verified_at' => now(),
-        'password' => Hash::make('password'),
-        'remember_token' => Str::random(10),
-    ]);
+    if (!$user) {
+        $user = User::query()->firstOrCreate([
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ]);
+    }
 
     return \Pest\Laravel\actingAs($user);
+}
+
+function apiRoute(string $route): string
+{
+    return '/api/v1/'.$route;
 }
