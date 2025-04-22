@@ -26,6 +26,7 @@ The API Starter Kit includes the following core features:
 - Code Quality Tools (Pint, Larastan, IDE Helper)
 - Pest for Testing (already configured and ready to use, see current tests).
 - Docker Configuration
+- Git Hooks (pre-commit and pre-push to automatically run Pint, Larastan, and test suites)
 
 ### Contributing
 Thank you for considering contributing to this API Starter Kit!.

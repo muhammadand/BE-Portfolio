@@ -1,11 +1,14 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "laravel-api-starter/api-starter-ket",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Comprehensive boilerplate designed specifically for backend developers who need to quickly scaffold RESTful APIs using Laravel.",
+    "author": "Ahmed Hdeawy <ahmedhdeawy@gmail.com>",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "api",
+        "rest"
     ],
     "license": "MIT",
     "require": {
