@@ -25,38 +25,7 @@ The API Starter Kit includes the following core features:
 - Telescope for Development & Debugging.
 - Code Quality Tools (Pint, Larastan, IDE Helper)
 - Pest for Testing (already configured and ready to use, see current tests).
-
-### Docker Configuration
-
-Brief: A Docker configuration for API development and deployment.
-
-Implementation Steps:
-
-- Set up Dockerfile for API container
-- Create docker-compose.yml for development environment
-- Set up database container
-- Document Docker setup
-
-### Deployment
-
-Brief: A deployment strategy for API deployment.
-
-Implementation Steps:
-
-- Set up deployment pipeline
-- Configure deployment environment
-- Implement deployment strategy
-- Document deployment process
-
-### CI/CD Templates
-
-Brief: Continuous Integration and Deployment templates for GitHub Actions.
-
-Implementation Steps:
-
-- Create GitHub Actions workflow templates
-- Configure automated testing
-- Document CI/CD setup
+- Docker Configuration
 
 ### Contributing
 Thank you for considering contributing to this API Starter Kit!.
