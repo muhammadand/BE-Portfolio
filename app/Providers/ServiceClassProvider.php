@@ -3,17 +3,15 @@
 namespace App\Providers;
 
 use App\Services\Concretes\AuthService;
-use App\Services\Contracts\AuthServiceInterface;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use App\Services\Contracts\UserServiceInterface;
 use App\Services\Concretes\UserService;
+use App\Services\Contracts\AuthServiceInterface;
+use App\Services\Contracts\UserServiceInterface;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceClassProvider extends BaseServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
     public function register(): void
     {

@@ -2,7 +2,6 @@
 
 namespace App\Services\Base\Concretes;
 
-use App\Repositories\Base\Contracts\BaseRepositoryInterface;
 use App\Repositories\Base\Contracts\QueryableRepositoryInterface;
 use App\Services\Base\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,9 +10,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseService implements BaseServiceInterface
 {
-    /**
-     * @var QueryableRepositoryInterface
-     */
     protected QueryableRepositoryInterface $repository;
 
     public function setRepository(QueryableRepositoryInterface $repository): QueryableRepositoryInterface
@@ -28,9 +24,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Get filtered, sorted, and included resources.
-     *
-     * @param array $columns
-     * @return Collection
      */
     public function getFiltered(array $columns = ['*']): Collection
     {
@@ -39,9 +32,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Get all resources
-     *
-     * @param array $columns
-     * @return Collection
      */
     public function all(array $columns = ['*']): Collection
     {
@@ -50,10 +40,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Get paginated resources
-     *
-     * @param int $perPage
-     * @param array $columns
-     * @return LengthAwarePaginator
      */
     public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
     {
@@ -62,10 +48,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Find resource by id
-     *
-     * @param int $id
-     * @param array $columns
-     * @return Model|null
      */
     public function find(int $id, array $columns = ['*']): ?Model
     {
@@ -74,10 +56,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Find resource or fail
-     *
-     * @param int $id
-     * @param array $columns
-     * @return Model
      */
     public function findOrFail(int $id, array $columns = ['*']): Model
     {
@@ -86,9 +64,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Create new resource
-     *
-     * @param array $data
-     * @return Model
      */
     public function create(array $data): Model
     {
@@ -97,10 +72,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Update resource
-     *
-     * @param int $id
-     * @param array $data
-     * @return Model
      */
     public function update(int $id, array $data): Model
     {
@@ -109,9 +80,6 @@ abstract class BaseService implements BaseServiceInterface
 
     /**
      * Delete resource
-     *
-     * @param int $id
-     * @return bool
      */
     public function delete(int $id): bool
     {

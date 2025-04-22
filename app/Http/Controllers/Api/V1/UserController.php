@@ -24,6 +24,7 @@ class UserController extends BaseApiController
     public function index(): JsonResponse
     {
         $users = $this->userService->getFilteredUsers(request());
+
         return $this->successResponse(UserResource::collection($users));
     }
 
@@ -33,6 +34,7 @@ class UserController extends BaseApiController
     public function all(): JsonResponse
     {
         $users = $this->userService->getAllUsers();
+
         return $this->successResponse(UserResource::collection($users));
     }
 
@@ -42,6 +44,7 @@ class UserController extends BaseApiController
     public function show(int $id): JsonResponse
     {
         $user = $this->userService->getUserById($id);
+
         return $this->successResponse(new UserResource($user));
     }
 
@@ -51,6 +54,7 @@ class UserController extends BaseApiController
     public function store(UserStoreRequest $request): JsonResponse
     {
         $user = $this->userService->createUser($request->validated());
+
         return $this->createdResponse(new UserResource($user));
     }
 
@@ -60,6 +64,7 @@ class UserController extends BaseApiController
     public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
         $user = $this->userService->updateUser($id, $request->validated());
+
         return $this->successResponse(new UserResource($user));
     }
 
@@ -69,6 +74,7 @@ class UserController extends BaseApiController
     public function destroy(int $id): JsonResponse
     {
         $this->userService->deleteUser($id);
+
         return $this->noContentResponse();
     }
 
@@ -78,6 +84,7 @@ class UserController extends BaseApiController
     public function active(): JsonResponse
     {
         $users = $this->userService->getActiveUsers();
+
         return $this->successResponse(UserResource::collection($users));
     }
 }

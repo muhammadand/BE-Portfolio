@@ -16,26 +16,20 @@ class AuthController extends BaseApiController
      */
     public function __construct(
         private readonly AuthServiceInterface $authService
-    ) {
-    }
+    ) {}
 
     /**
      * Register a new user.
-     *
-     * @param  RegisterRequest  $request
-     * @return JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = $this->authService->register($request->validated());
+
         return $this->successResponse($data);
     }
 
     /**
      * Login a user.
-     *
-     * @param  LoginRequest  $request
-     * @return JsonResponse
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -46,19 +40,16 @@ class AuthController extends BaseApiController
 
     /**
      * Get the authenticated user.
-     *
-     * @return JsonResponse
      */
     public function me(): JsonResponse
     {
         $user = $this->authService->me();
+
         return $this->successResponse(new UserResource($user));
     }
 
     /**
      * Refresh the token.
-     *
-     * @return JsonResponse
      */
     public function refresh(): JsonResponse
     {
@@ -72,8 +63,6 @@ class AuthController extends BaseApiController
 
     /**
      * Logout the user.
-     *
-     * @return JsonResponse
      */
     public function logout(): JsonResponse
     {

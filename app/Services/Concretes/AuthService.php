@@ -11,15 +11,13 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService extends BaseService implements AuthServiceInterface
 {
     /**
      * UserService constructor.
-     *
-     * @param  UserRepositoryInterface  $userRepository
      */
     public function __construct(protected UserRepositoryInterface $userRepository)
     {
@@ -30,7 +28,6 @@ class AuthService extends BaseService implements AuthServiceInterface
      * Register a new user.
      *
      * @param  array<string, mixed>  $data
-     * @return array
      */
     public function register(array $data): array
     {
@@ -48,7 +45,7 @@ class AuthService extends BaseService implements AuthServiceInterface
      * Authenticate a user.
      *
      * @param  array<string, mixed>  $credentials
-     * @return array
+     *
      * @throws AuthenticationException If authentication fails
      */
     public function login(array $credentials): array
@@ -67,13 +64,14 @@ class AuthService extends BaseService implements AuthServiceInterface
      * Get the authenticated user.
      *
      * @return Authenticatable The authenticated user
+     *
      * @throws AuthenticationException If user is not authenticated
      */
     public function me(): Authenticatable
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             throw new AuthenticationException('User not authenticated');
         }
 
@@ -84,6 +82,7 @@ class AuthService extends BaseService implements AuthServiceInterface
      * Refresh the token.
      *
      * @return string New JWT token
+     *
      * @throws AuthenticationException If token refresh fails
      */
     public function refresh(): string
@@ -91,7 +90,7 @@ class AuthService extends BaseService implements AuthServiceInterface
         try {
             $token = Auth::refresh();
 
-            if (!$token) {
+            if (! $token) {
                 throw new AuthenticationException('Failed to refresh token');
             }
 
@@ -103,21 +102,15 @@ class AuthService extends BaseService implements AuthServiceInterface
 
     /**
      * Invalidate the token.
-     *
-     * @return bool
      */
     public function logout(): bool
     {
         Auth::logout();
+
         return true;
     }
 
-    /**
-     * @param  User  $user
-     * @param  string|null  $token
-     * @return array
-     */
-    private function prepareUserWithToken(User $user, string $token = null): array
+    private function prepareUserWithToken(User $user, ?string $token = null): array
     {
         return [
             'user' => new UserResource($user),

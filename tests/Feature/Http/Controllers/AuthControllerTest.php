@@ -15,7 +15,7 @@ function loginUser(): TestResponse
 
     return postJson(apiRoute('auth/login'), [
         'email' => $user->email,
-        'password' => 'password'
+        'password' => 'password',
     ]);
 }
 
@@ -31,7 +31,7 @@ it('registers new user successfully', function () {
             'data' => [
                 'user',
                 'token',
-                'token_type'
+                'token_type',
             ],
         ]);
 });
@@ -43,14 +43,14 @@ it('login user with credentials successfully', function () {
         ->assertStatus(200)
         ->assertJson([
             'data' => [
-                'user' => UserTestUtils::matchUserResponse($response->json()['data']['user'])
-            ]
+                'user' => UserTestUtils::matchUserResponse($response->json()['data']['user']),
+            ],
         ])
         ->assertJsonStructure([
             'data' => [
                 'user',
                 'token',
-                'token_type'
+                'token_type',
             ],
         ]);
 });
@@ -61,10 +61,10 @@ it('gets the authenticated user data', function () {
     authedUser($user)->getJson(apiRoute('auth/me'))
         ->assertStatus(200)
         ->assertJson([
-            'data' => UserTestUtils::matchUserResponse($user)
+            'data' => UserTestUtils::matchUserResponse($user),
         ])
         ->assertJsonStructure([
-            'data' => UserTestUtils::userResponse()
+            'data' => UserTestUtils::userResponse(),
         ]);
 });
 
@@ -77,7 +77,7 @@ it('returns refresh token', function () {
         ->assertJsonStructure([
             'data' => [
                 'token',
-                'token_type'
+                'token_type',
             ],
         ]);
 });
@@ -90,12 +90,12 @@ it('logouts the authenticated user', function () {
         ->assertStatus(200)
         ->assertJson([
             'data' => [
-                'message' => "Successfully logged out"
-            ]
+                'message' => 'Successfully logged out',
+            ],
         ])
         ->assertJsonStructure([
             'data' => [
-                'message'
+                'message',
             ],
         ]);
 });

@@ -12,7 +12,7 @@ class UserTestUtils
             'id',
             'name',
             'email',
-            'created_at'
+            'created_at',
         ];
     }
 
@@ -21,7 +21,7 @@ class UserTestUtils
         return [
             'id' => $user['id'],
             'name' => $user['name'],
-            'email' => $user['email']
+            'email' => $user['email'],
         ];
     }
 }

@@ -15,8 +15,6 @@ class UserService extends BaseService implements UserServiceInterface
 {
     /**
      * UserService constructor.
-     *
-     * @param  UserRepositoryInterface  $userRepository
      */
     public function __construct(protected UserRepositoryInterface $userRepository)
     {
@@ -41,10 +39,6 @@ class UserService extends BaseService implements UserServiceInterface
 
     /**
      * Get filtered users with pagination
-     *
-     * @param  Request|null  $request
-     * @param  int  $perPage
-     * @return LengthAwarePaginator
      */
     public function getFilteredUsers(?Request $request = null, int $perPage = 15): LengthAwarePaginator
     {
@@ -59,7 +53,7 @@ class UserService extends BaseService implements UserServiceInterface
         try {
             return $this->repository->findOrFail($id);
         } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException("User not found");
+            throw new ModelNotFoundException('User not found');
         }
     }
 
@@ -79,7 +73,7 @@ class UserService extends BaseService implements UserServiceInterface
         try {
             return $this->repository->update($id, $data);
         } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException("User not found");
+            throw new ModelNotFoundException('User not found');
         }
     }
 
@@ -90,9 +84,10 @@ class UserService extends BaseService implements UserServiceInterface
     {
         try {
             $this->repository->delete($id);
+
             return true;
         } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException("User not found");
+            throw new ModelNotFoundException('User not found');
         }
     }
 

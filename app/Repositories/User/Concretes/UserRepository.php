@@ -12,8 +12,6 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -22,8 +20,6 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
 
     /**
      * Return All Users
-     *
-     * @return Collection
      */
     public function getUsers(): Collection
     {
@@ -37,22 +33,18 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
 
     /**
      * Get allowed filters for this repository.
-     *
-     * @return array
      */
     public function getAllowedFilters(): array
     {
         return [
             AllowedFilter::exact('id'),
             'name',
-            'email'
+            'email',
         ];
     }
 
     /**
      * Get allowed sorts for this repository.
-     *
-     * @return array
      */
     public function getAllowedSorts(): array
     {
@@ -61,8 +53,6 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
 
     /**
      * Get allowed includes for this repository.
-     *
-     * @return array
      */
     public function getAllowedIncludes(): array
     {
@@ -73,8 +63,6 @@ class UserRepository extends QueryableRepository implements UserRepositoryInterf
 
     /**
      * Get allowed fields for this repository.
-     *
-     * @return array
      */
     public function getAllowedFields(): array
     {

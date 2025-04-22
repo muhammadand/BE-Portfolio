@@ -11,8 +11,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 {
     /**
      * Get a query builder instance with filters, sorts, and includes applied.
-     *
-     * @return QueryBuilder
      */
     public function query(): QueryBuilder
     {
@@ -25,9 +23,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     /**
      * Get filtered, sorted, and included resources.
-     *
-     * @param array $columns
-     * @return Collection
      */
     public function getFiltered(array $columns = ['*']): Collection
     {
@@ -36,21 +31,16 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     /**
      * Get paginated, filtered, sorted, and included resources.
-     *
-     * @param int $perPage
-     * @param array $columns
-     * @return LengthAwarePaginator
      */
     public function paginateFiltered(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
     {
         $perPage = request()?->input('per_page', $perPage) ?? $perPage;
+
         return $this->query()->paginate($perPage, $columns);
     }
 
     /**
      * Get allowed filters for this repository.
-     *
-     * @return array
      */
     public function getAllowedFilters(): array
     {
@@ -59,8 +49,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     /**
      * Get allowed sorts for this repository.
-     *
-     * @return array
      */
     public function getAllowedSorts(): array
     {
@@ -69,8 +57,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     /**
      * Get allowed includes for this repository.
-     *
-     * @return array
      */
     public function getAllowedIncludes(): array
     {
@@ -79,8 +65,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     /**
      * Get allowed fields for this repository.
-     *
-     * @return array
      */
     public function getAllowedFields(): array
     {

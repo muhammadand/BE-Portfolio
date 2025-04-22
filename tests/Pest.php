@@ -45,9 +45,9 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function authedUser(User $user = null): \Illuminate\Foundation\Testing\TestCase
+function authedUser(?User $user = null): \Illuminate\Foundation\Testing\TestCase
 {
-    if (!$user) {
+    if (! $user) {
         $user = User::query()->firstOrCreate([
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

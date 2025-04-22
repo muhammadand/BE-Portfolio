@@ -15,16 +15,12 @@ class JwtMiddleware extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
      */
     public function handle(Request $request, Closure $next): mixed
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'User not found'], Response::HTTP_UNAUTHORIZED);
             }
         } catch (TokenExpiredException) {

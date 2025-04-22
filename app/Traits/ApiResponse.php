@@ -10,9 +10,6 @@ trait ApiResponse
 {
     /**
      * Return a success JSON response.
-     * @param  mixed  $data
-     * @param  int  $code
-     * @return JsonResponse
      */
     public function successResponse(mixed $data, int $code = Response::HTTP_OK): JsonResponse
     {
@@ -20,6 +17,7 @@ trait ApiResponse
         if ($data instanceof JsonResource) {
             // Get the fully transformed data (includes pagination, links, etc.)
             $resourceData = $data->response()->getData(true);
+
             return response()->json($resourceData, $code);
         }
 

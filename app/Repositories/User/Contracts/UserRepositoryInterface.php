@@ -9,9 +9,8 @@ interface UserRepositoryInterface extends QueryableRepositoryInterface
 {
     /**
      * Return All Users
-     *
-     * @return Collection
      */
     public function getUsers(): Collection;
+
     public function getActiveUsers(): Collection;
 }

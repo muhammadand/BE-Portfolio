@@ -86,7 +86,7 @@ it('stores a new user', function () {
 it('updates user by id', function () {
     $user = User::factory()->make([
         'id' => 1,
-        'name' => 'updated-name'
+        'name' => 'updated-name',
     ]);
 
     $this->repository
