@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel-api-starter/api-starter-ket",
+    "name": "hdeawy/api-starter-kit",
     "type": "project",
     "description": "Comprehensive boilerplate designed specifically for backend developers who need to quickly scaffold RESTful APIs using Laravel.",
     "author": "Ahmed Hdeawy <ahmedhdeawy@gmail.com>",
