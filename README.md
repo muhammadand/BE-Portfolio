@@ -66,6 +66,24 @@ docker run -it --rm \
     create-project hdeawy/api-starter-kit .
 ```
 
+- Update the `.env` file with your database credentials
+```bash
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_api
+DB_USERNAME=root
+DB_PASSWORD=password
+````
+- 🔥 Start the Docker containers
+```bash
+sail up -d
+```
+- Add JWT secret
+```bash
+sail artisan jwt:secret
+```
+
 #### Manually
 - Clone the repository
 ```bash
