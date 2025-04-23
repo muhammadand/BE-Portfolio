@@ -51,12 +51,8 @@ composer create-project hdeawy/api-starter-kit
 ```
 
 #### Using Docker
-- Clone the repository
-```
-git clone git@github.com:hdeawy/api-starter-kit.git
-cd api-starter-kit
-```
-- Install dependencies using Docker
+
+- Install starter using Docker
 ```bash
 docker run -it --rm \
     -v $(pwd):/app \
@@ -79,7 +75,10 @@ DB_PASSWORD=password
 ```bash
 sail up -d
 ```
-- Add JWT secret
+- Finally, run the migrations and generate the JWT secret
+```bash
+sail artisan migrate
+```
 ```bash
 sail artisan jwt:secret
 ```
@@ -112,6 +111,25 @@ Run the tests with Pest:
 ```bash
 php artisan test
 ```
+<p align="center"><a href="https://github.com/hdeawy/api-starter-kit" target="_blank"><img src="https://hdeawy-public-storage.s3.us-east-1.amazonaws.com/tests.png" width="400" alt="API Starter Kit"></a></p>
+
+
+### Laravel Pint
+Code style fixer for minimalists
+```bash
+composer pint
+```
+<p align="center"><a href="https://github.com/hdeawy/api-starter-kit" target="_blank"><img src="https://hdeawy-public-storage.s3.us-east-1.amazonaws.com/pint.png" width="400" alt="API Starter Kit"></a></p>
+
+
+
+### Larastan
+Finding errors in your code:
+```bash
+composer stan
+```
+<p align="center"><a href="https://github.com/hdeawy/api-starter-kit" target="_blank"><img src="https://hdeawy-public-storage.s3.us-east-1.amazonaws.com/stan.png" width="400" alt="API Starter Kit"></a></p>
+
 
 ### Contributing
 Thank you for considering contributing to this API Starter Kit!.
