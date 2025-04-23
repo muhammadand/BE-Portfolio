@@ -51,6 +51,12 @@ composer create-project hdeawy/api-starter-kit
 ```
 
 #### Using Docker
+- Clone the repository
+```
+git clone git@github.com:hdeawy/api-starter-kit.git
+cd api-starter-kit
+```
+- Install dependencies using Docker
 ```bash
 docker run -it --rm \
     -v $(pwd):/app \
