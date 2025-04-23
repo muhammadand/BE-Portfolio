@@ -132,11 +132,11 @@ composer stan
 
 
 ### Contributing
-Thank you for considering contributing to this API Starter Kit!.
+Thank you for considering contributing to this API Starter Kit!.  All the contribution guidelines are mentioned [here](CONTRIBUTING.md).
 
 ### Security Vulnerabilities
 If you discover a security vulnerability within the starter kit, please send an e-mail to me via ahmedhdeawy@gmail.com.
 
 ### License
-This Laravel API Starter Kit is open-sourced software licensed under the MIT license.
+This Laravel API Starter Kit is open-sourced software licensed under the [MIT license](LICENSE.md).
 
