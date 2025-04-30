@@ -70,7 +70,8 @@ DB_PORT=3306
 DB_DATABASE=laravel_api
 DB_USERNAME=root
 DB_PASSWORD=password
-````
+```
+
 - 🔥 Start the Docker containers
 ```bash
 sail up -d
