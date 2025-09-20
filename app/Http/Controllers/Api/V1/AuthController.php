@@ -23,20 +23,37 @@ class AuthController extends BaseApiController
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $data = $this->authService->register($request->validated());
-
-        return $this->successResponse($data);
+        // Mendapatkan data yang sudah divalidasi termasuk role
+        $data = $request->validated();
+    
+        // Menambahkan role ke data yang akan diteruskan ke service
+        // $data['role'] sudah ada karena sudah divalidasi di RegisterRequest
+    
+        // Mendaftarkan pengguna dengan data yang telah diterima
+        $user = $this->authService->register($data);
+    
+        // Mengembalikan response sukses dengan data pengguna yang baru didaftarkan
+        return $this->successResponse($user);
     }
+    
 
     /**
      * Login a user.
      */
     public function login(LoginRequest $request): JsonResponse
     {
+        // Mengambil data login dari request
         $data = $this->authService->login($request->validated());
-
-        return $this->successResponse($data);
+    
+        // Mengembalikan response sukses dengan pesan "Login successful"
+        return $this->successResponse([
+            'message' => 'Login successful',  // Menambahkan pesan login sukses
+            'user' => $data['user'],          // Data pengguna
+            'token' => $data['token'],        // JWT token
+            'token_type' => $data['token_type'] // Tipe token, biasanya 'bearer'
+        ]);
     }
+    
 
     /**
      * Get the authenticated user.

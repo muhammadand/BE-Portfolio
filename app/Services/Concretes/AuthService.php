@@ -32,14 +32,18 @@ class AuthService extends BaseService implements AuthServiceInterface
     public function register(array $data): array
     {
         /** @var User $user */
+        // Menambahkan role ke dalam data yang diterima
         $user = $this->repository->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => $data['role'], // Menambahkan role
         ]);
-
+    
+        // Mengembalikan user yang terdaftar bersama token
         return $this->prepareUserWithToken($user);
     }
+    
 
     /**
      * Authenticate a user.

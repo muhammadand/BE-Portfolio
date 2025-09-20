@@ -11,7 +11,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true; // Kamu bisa menyesuaikan ini jika perlu otorisasi lebih lanjut
     }
 
     /**
@@ -26,6 +26,8 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string'],
+            // Menambahkan validasi untuk role
+            'role' => ['required', 'string', 'in:admin,support,finance'], // Menetapkan role yang valid
         ];
     }
 
@@ -39,6 +41,7 @@ class RegisterRequest extends FormRequest
         return [
             'password.confirmed' => 'The password confirmation does not match.',
             'password_confirmation.required' => 'The password confirmation field is required.',
+            'role.in' => 'The selected role is invalid. Allowed roles are: admin, support, finance.', // Custom message untuk role
         ];
     }
 }
