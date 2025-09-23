@@ -3,6 +3,10 @@
 namespace App\Providers;
 use App\Services\Contracts\ProductCategoryServiceInterface;
 use App\Services\Concretes\ProductCategoryService;
+use App\Services\Contracts\RoleServiceInterface;
+use App\Services\Concretes\RoleService;
+use App\Services\Contracts\PermissionServiceInterface;
+use App\Services\Concretes\PermissionService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -18,7 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-       
+        $this->app->bind(RoleServiceInterface::class, RoleService::class);
+        $this->app->bind(PermissionServiceInterface::class, PermissionService::class);
         // Bind interface ke implementasinya
           $this->app->bind(ProductCategoryServiceInterface::class, ProductCategoryService::class);
         if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
