@@ -27,6 +27,11 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
+            // Test
+            Route::get('/test', function(){
+                return "OK";
+            });
+
             // API v1 routes
             Route::middleware('api')
                 ->prefix('api/v1')
