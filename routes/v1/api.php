@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
+use App\Http\Controllers\Api\V1\PermissionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 /*
@@ -38,4 +40,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 });
 Route::apiResource('product-categories', ProductCategoryController::class);
+Route::apiResource('roles', RoleController::class)->names('roles');
+Route::apiResource('permissions', PermissionController::class)->names('permissions');
 
