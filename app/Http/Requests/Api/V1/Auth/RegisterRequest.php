@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\V1\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Kamu bisa menyesuaikan ini jika perlu otorisasi lebih lanjut
+        return true;
     }
 
     /**
@@ -23,11 +24,16 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string'],
-            // Menambahkan validasi untuk role
-            'role' => ['required', 'string', 'in:admin,support,finance'], // Menetapkan role yang valid
+
+            // Validasi role berdasarkan kolom 'slug' di tabel roles
+            'role' => [
+                'required',
+                'string',
+                Rule::exists('roles', 'slug'), // cek apakah slug role ada di tabel roles
+            ],
         ];
     }
 
@@ -41,7 +47,7 @@ class RegisterRequest extends FormRequest
         return [
             'password.confirmed' => 'The password confirmation does not match.',
             'password_confirmation.required' => 'The password confirmation field is required.',
-            'role.in' => 'The selected role is invalid. Allowed roles are: admin, support, finance.', // Custom message untuk role
+            'role.exists' => 'The selected role is invalid. Please use one of the existing roles.',
         ];
     }
 }
