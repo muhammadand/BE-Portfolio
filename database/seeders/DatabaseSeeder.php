@@ -14,7 +14,10 @@ class DatabaseSeeder extends Seeder
     {
         // Run the test users seeder for query builder testing
         $this->call([
-            TestUsersSeeder::class,
+            RoleSeeder::class,
+        PermissionSeeder::class,
+        UserSeeder::class,
+        UserRolePermissionSeeder::class, 
         ]);
     }
 }

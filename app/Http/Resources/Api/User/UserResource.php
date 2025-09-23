@@ -22,8 +22,29 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->role,
+            'roles' => $this->roles->map(function($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'slug' => $role->slug,
+                    'permissions' => $role->permissions->map(function($perm) {
+                        return [
+                            'id' => $perm->id,
+                            'name' => $perm->name,
+                            'slug' => $perm->slug,
+                        ];
+                    }),
+                ];
+            }),
+            'all_permissions' => $this->all_permissions->map(function($perm) {
+                return [
+                    'id' => $perm->id,
+                    'name' => $perm->name,
+                    'slug' => $perm->slug,
+                ];
+            }),
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

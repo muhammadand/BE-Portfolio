@@ -57,7 +57,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'role',
+        'is_active',
     ];
 
     /**
@@ -80,6 +80,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -100,4 +101,17 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
+    }
+
+
+    public function getAllPermissionsAttribute()
+{
+    return $this->roles->flatMap(function ($role) {
+        return $role->permissions;
+    })->unique('id');
+}
+
 }
