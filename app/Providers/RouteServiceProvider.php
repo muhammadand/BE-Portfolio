@@ -28,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             // Test
-            Route::get('/test', function(){
+            Route::get('/ping', function(){
                 return "OK";
             });
 
