@@ -23,31 +23,49 @@
       * { box-sizing:border-box; }
       html,body { height:100%; }
       body { margin:0; font-family:'Instrument Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Apple Color Emoji','Segoe UI Emoji'; color:var(--fg); background:var(--bg); }
-      .container { max-width:920px; margin-inline:auto; padding:32px 20px; }
-      .hero { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
-      .brand { display:flex; align-items:center; gap:12px; }
-      .mark { height:40px; width:40px; border-radius:12px; background:var(--accent); color:white; display:grid; place-items:center; font-weight:700; letter-spacing:.5px; }
-      .title { font-size:20px; font-weight:600; line-height:1.2; }
-      .subtitle { font-size:13px; color:var(--muted); }
-      .badges { display:flex; gap:8px; align-items:center; }
+      .container { max-width:920px; margin-inline:auto; padding:20px 14px; }
+      @media (min-width: 640px) { .container { padding:28px 18px; } }
+      @media (min-width: 960px) { .container { padding:32px 20px; } }
+
+      .hero { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+      @media (max-width: 600px){ .hero { flex-direction:column; align-items:flex-start; gap:10px; } }
+
+      .brand { display:flex; align-items:center; gap:10px; min-width:0; }
+      .mark { height:36px; width:36px; border-radius:10px; background:var(--accent); color:white; display:grid; place-items:center; font-weight:700; letter-spacing:.5px; flex:0 0 auto; }
+      @media (min-width: 640px){ .mark { height:40px; width:40px; border-radius:12px; } }
+      .title { font-size:18px; font-weight:600; line-height:1.25; }
+      @media (min-width: 640px){ .title { font-size:20px; } }
+      .subtitle { font-size:12px; color:var(--muted); }
+
+      .badges { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
       .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#fff; }
-      .main { display:grid; grid-template-columns:1fr; gap:16px; }
-      @media (min-width: 960px) { .main { grid-template-columns: 1.4fr .9fr; } }
-      .card { background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 6px 20px rgba(0,0,0,.04); }
-      .card > .hd { padding:12px 14px; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted); display:flex; align-items:center; justify-content:space-between; }
-      .card > .bd { padding:16px; }
-      .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1px solid var(--line); background:#fff; text-decoration:none; color:inherit; font-weight:500; transition:transform .12s ease; }
+
+      .main { display:grid; grid-template-columns:1fr; gap:14px; }
+      @media (min-width: 960px) { .main { grid-template-columns: 1.4fr .9fr; gap:16px; } }
+
+      .card { background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 6px 20px rgba(0,0,0,.04); overflow:hidden; }
+      .card > .hd { padding:10px 12px; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+      .card > .bd { padding:14px; }
+
+      .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; border-radius:10px; border:1px solid var(--line); background:#fff; text-decoration:none; color:inherit; font-weight:500; transition:transform .12s ease; min-height:40px; }
       .btn:hover { transform:translateY(-1px); }
-      .grid-3 { display:grid; grid-template-columns:1fr; gap:10px; }
-      @media (min-width:680px){ .grid-3 { grid-template-columns:repeat(3,1fr); } }
+      .btns { display:grid; grid-template-columns:1fr; gap:8px; }
+      @media (min-width: 520px){ .btns { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+      .grid-3 { display:grid; grid-template-columns:1fr; gap:8px; }
+      @media (min-width:680px){ .grid-3 { grid-template-columns:repeat(3,1fr); gap:10px; } }
+
       .kpi { padding:12px; border:1px solid var(--line); border-radius:12px; }
       .kpi .k { font-size:12px; color:var(--muted); margin-bottom:4px; }
-      .kpi .v { font-size:15px; font-weight:600; }
+      .kpi .v { font-size:15px; font-weight:600; word-break:break-word; }
+
       pre,code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
-      pre { margin:0; padding:14px; background:#fbfbfa; border-top:1px solid var(--line); border-bottom-left-radius:var(--radius); border-bottom-right-radius:var(--radius); overflow:auto; }
+      pre { margin:0; padding:12px; background:#fbfbfa; border-top:1px solid var(--line); border-bottom-left-radius:var(--radius); border-bottom-right-radius:var(--radius); overflow:auto; }
+
       .list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
-      .list a { text-decoration:underline; text-underline-offset:3px; }
-      footer { text-align:center; font-size:12px; color:var(--muted); margin-top:24px; }
+      .list a { text-decoration:underline; text-underline-offset:3px; word-break:break-all; }
+
+      footer { text-align:center; font-size:12px; color:var(--muted); margin-top:20px; }
     </style>
   </head>
 
@@ -72,10 +90,10 @@
         <section class="card">
           <div class="hd">
             <span>Quick start</span>
-            <button id="copyBtn" class="btn" type="button">Copy</button>
+            <button id="copyBtn" class="btn" type="button" style="min-width:96px;">Copy</button>
           </div>
           <div class="bd">
-            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+            <div class="btns" style="margin-bottom:12px;">
               <a class="btn" href="{{ url('/docs') }}">API Docs</a>
               <a class="btn" href="{{ url('/openapi.json') }}">OpenAPI</a>
               <a class="btn" href="{{ url('/health') }}">Health</a>
@@ -98,6 +116,18 @@
               <li>
                 <a href="{{ url('/ping') }}">GET /ping</a>
                 <span style="font-size:12px;color:var(--muted);margin-left:6px;">200 OK</span>
+              </li>
+              <li>
+                <a href="{{ url('/health') }}">GET /health</a>
+                <span style="font-size:12px;color:var(--muted);margin-left:6px;">200 OK</span>
+              </li>
+              <li>
+                <a href="{{ url('/docs') }}">GET /docs</a>
+                <span style="font-size:12px;color:var(--muted);margin-left:6px;">Swagger</span>
+              </li>
+              <li>
+                <a href="{{ url('/openapi.json') }}">GET /openapi.json</a>
+                <span style="font-size:12px;color:var(--muted);margin-left:6px;">Schema</span>
               </li>
             </ul>
           </div>
