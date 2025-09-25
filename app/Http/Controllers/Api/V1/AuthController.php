@@ -26,8 +26,7 @@ class AuthController extends BaseApiController
         // Mendapatkan data yang sudah divalidasi termasuk role
         $data = $request->validated();
     
-        // Menambahkan role ke data yang akan diteruskan ke service
-        // $data['role'] sudah ada karena sudah divalidasi di RegisterRequest
+
     
         // Mendaftarkan pengguna dengan data yang telah diterima
         $user = $this->authService->register($data);

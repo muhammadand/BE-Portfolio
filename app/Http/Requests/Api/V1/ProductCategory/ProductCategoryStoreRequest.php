@@ -6,18 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProductCategoryStoreRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            'parent_id'   => 'nullable|exists:product_categories,id',
-            'name'        => 'required|string|max:255',
-            'slug'        => 'required|string|max:255|unique:product_categories,slug',
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|unique:product_categories,slug',
             'description' => 'nullable|string',
+            'parent_id' => 'nullable|exists:product_categories,id',
         ];
     }
 }
+

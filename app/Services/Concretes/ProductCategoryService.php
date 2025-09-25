@@ -4,21 +4,18 @@ namespace App\Services\Concretes;
 
 use App\Models\ProductCategory;
 use App\Services\Contracts\ProductCategoryServiceInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 
-use App\Services\Base\Concretes\BaseService;
-
-class ProductCategoryService extends BaseService implements ProductCategoryServiceInterface
+class ProductCategoryService implements ProductCategoryServiceInterface
 {
-    public function getFilteredCategories($request): LengthAwarePaginator
+    public function getFilteredCategories(array $filters = [])
     {
-        return ProductCategory::query()->paginate(15);
-    }
+        $query = ProductCategory::query();
 
-    public function getAllCategories(): Collection
-    {
-        return ProductCategory::all();
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', "%{$filters['name']}%");
+        }
+
+        return $query->get();
     }
 
     public function getCategoryById(int $id): ProductCategory
@@ -38,9 +35,9 @@ class ProductCategoryService extends BaseService implements ProductCategoryServi
         return $category;
     }
 
-    public function deleteCategory(int $id): bool
+    public function deleteCategory(int $id): void
     {
         $category = ProductCategory::findOrFail($id);
-        return $category->delete();
+        $category->delete();
     }
 }

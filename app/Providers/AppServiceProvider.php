@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(
+            \App\Services\Contracts\ProductCategoryServiceInterface::class,
+            \App\Services\Concretes\ProductCategoryService::class
+        );
+        
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
         $this->app->bind(PermissionServiceInterface::class, PermissionService::class);
         // Bind interface ke implementasinya
