@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
+use App\Http\Controllers\Api\V1\ActivityLogController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('me', [AuthController::class, 'me'])->name('me');
         Route::get('refresh', [AuthController::class, 'refresh'])->name('refresh');
-        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
 
@@ -50,4 +51,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Permissions
     Route::apiResource('permissions', PermissionController::class)->names('permissions');
+
+     // Activity Logs (hanya index, show, destroy)
+     Route::apiResource('activity-logs', ActivityLogController::class)
+     ->only(['index', 'show', 'destroy'])
+     ->names('activity-logs');
 });

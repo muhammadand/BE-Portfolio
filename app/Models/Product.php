@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasActivityLogs;
+
 
 class Product extends Model
 {
+    use HasActivityLogs;
     protected $table = 'products';
 
     protected $fillable = [

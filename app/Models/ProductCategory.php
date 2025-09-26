@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasActivityLogs;
+
 class ProductCategory extends Model
 {
+    use HasActivityLogs;
+
     protected $table = 'product_categories';
 
     protected $fillable = [
@@ -13,9 +17,6 @@ class ProductCategory extends Model
         'name',
         'slug',
         'description',
-        'created_at',
-        'updated_at',
-        'deleted_at',
         'created_by',
         'updated_by',
         'deleted_by'

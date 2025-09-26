@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\ProductCategory;
+// use App\Models\ProductCategory;
 use App\Models\User;
 
 class ProductCategoryPolicy

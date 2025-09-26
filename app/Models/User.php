@@ -11,6 +11,8 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Traits\HasActivityLogs;
+
 
 /**
  * @property int $id
@@ -47,6 +49,7 @@ class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    use HasActivityLogs;
 
     /**
      * The attributes that are mass assignable.

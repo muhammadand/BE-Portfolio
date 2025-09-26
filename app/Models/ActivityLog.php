@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
+    
     protected $table = 'activity_logs';
     public $timestamps = false; // hanya ada created_at
 
@@ -19,14 +20,18 @@ class ActivityLog extends Model
         'created_at'
     ];
 
+    protected $casts = [
+        'properties' => 'array',
+        'created_at' => 'datetime',
+    ];
+
     public function causer()
     {
         return $this->belongsTo(User::class, 'causer_id');
     }
 
-    // Polymorphic untuk subject (Product, Vendor, Category, dll)
     public function subject()
     {
-        return $this->morphTo(null, 'subject_type', 'subject_id');
+        return $this->morphTo();
     }
 }
