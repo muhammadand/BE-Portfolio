@@ -15,9 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->timestamps();
+
+            // Kolom tracking user
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
+
+            $table->timestamps(); // created_at & updated_at
         });
-        
     }
 
     /**

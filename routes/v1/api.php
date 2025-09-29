@@ -51,9 +51,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Permissions
     Route::apiResource('permissions', PermissionController::class)->names('permissions');
+// Activity Logs
+Route::get('activity-logs', [ActivityLogController::class, 'index'])
+    ->name('activity-logs.index');
 
-     // Activity Logs (hanya index, show, destroy)
-     Route::apiResource('activity-logs', ActivityLogController::class)
-     ->only(['index', 'show', 'destroy'])
-     ->names('activity-logs');
+    
 });

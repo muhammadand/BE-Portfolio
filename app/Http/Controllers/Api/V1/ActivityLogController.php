@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\ActivityLog;
-use App\Http\Resources\Api\logs\ActivityLogResource;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Api\BaseApiController;
+use App\Repositories\ActivityLog\Contracts\ActivityRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 
 class ActivityLogController extends BaseApiController
 {
+    public function __construct(
+        protected readonly ActivityRepositoryInterface $activityRepo
+    ) {}
+
     public function index(): JsonResponse
     {
-        $logs = ActivityLog::with('causer')->latest()->paginate(20);
-        return response()->json(ActivityLogResource::collection($logs));
-    }
+        $filters = request()->only(['user_id', 'model', 'from', 'to', 'sort', 'include', 'fields']);
 
-    public function show(ActivityLog $activityLog): JsonResponse
-    {
-        $activityLog->load('causer');
-        return response()->json(new ActivityLogResource($activityLog));
-    }
+        $logs = $this->activityRepo->getActivities($filters);
 
-    public function destroy(ActivityLog $activityLog): JsonResponse
-    {
-        $activityLog->delete();
-        return response()->json(null, 204);
+        return $this->successResponse($logs);
     }
 }

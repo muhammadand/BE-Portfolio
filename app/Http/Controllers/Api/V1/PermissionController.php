@@ -8,7 +8,6 @@ use App\Http\Requests\Api\V1\Permission\PermissionUpdateRequest;
 use App\Http\Resources\Api\Permission\PermissionResource;
 use App\Services\Contracts\PermissionServiceInterface;
 use Illuminate\Http\JsonResponse;
-use App\Models\Permission;
 
 class PermissionController extends BaseApiController
 {
@@ -18,9 +17,10 @@ class PermissionController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        $this->authorize('viewAny', Permission::class);
+        $this->authorize('viewAny', \App\Models\Permission::class);
 
-        $permissions = $this->permissionService->getAllPermissions();
+        $permissions = $this->permissionService->getPermissions();
+
         return $this->successResponse(PermissionResource::collection($permissions));
     }
 
@@ -34,7 +34,7 @@ class PermissionController extends BaseApiController
 
     public function store(PermissionStoreRequest $request): JsonResponse
     {
-        $this->authorize('create', Permission::class);
+        $this->authorize('create', \App\Models\Permission::class);
 
         $permission = $this->permissionService->createPermission($request->validated());
         return $this->createdResponse(new PermissionResource($permission));

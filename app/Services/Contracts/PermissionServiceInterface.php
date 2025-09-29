@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 interface PermissionServiceInterface
 {
     public function getAllPermissions(): Collection;
+    public function getPermissions(): Collection;
     public function getPermissionById(int $id): ?Model;
     public function createPermission(array $data): Model;
     public function updatePermission(int $id, array $data): Model;

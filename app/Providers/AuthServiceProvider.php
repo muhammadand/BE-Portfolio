@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\ProductCategory;
 use App\Policies\ProductCategoryPolicy;
+use Spatie\Activitylog\Models\Activity;
+use App\Policies\ActivityPolicy;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         ProductCategory::class => ProductCategoryPolicy::class,
+        Activity::class => ActivityPolicy::class,
         // Tambahkan model lain & policy di sini jika perlu
     ];
 

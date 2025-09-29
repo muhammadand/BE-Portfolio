@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Role\Contracts\RoleRepositoryInterface;
+use App\Repositories\Role\Concretes\RoleRepository;
+use App\Repositories\Permission\Contracts\PermissionRepositoryInterface;
+use App\Repositories\Permission\Concretes\PermissionRepository;
+use App\Repositories\ActivityLog\Contracts\ActivityRepositoryInterface;
+use App\Repositories\ActivityLog\Concretes\ActivityRepository;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,8 +30,24 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
+            ActivityRepositoryInterface::class,
+            ActivityRepository::class
+        );
+
+       
+        $this->app->bind(
+            \App\Repositories\ProductCategory\Contracts\ProductCategoryRepositoryInterface::class,
+            \App\Repositories\ProductCategory\Concretes\ProductCategoryRepository::class
+        );
+        $this->app->bind(
             \App\Services\Contracts\ProductCategoryServiceInterface::class,
             \App\Services\Concretes\ProductCategoryService::class
+        );
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
+        $this->app->bind(RoleServiceInterface::class, RoleService::class);
+        $this->app->bind(
+            PermissionRepositoryInterface::class,
+            PermissionRepository::class
         );
         
         $this->app->bind(RoleServiceInterface::class, RoleService::class);

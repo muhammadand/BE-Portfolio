@@ -17,11 +17,14 @@ class RoleController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        $this->authorize('viewAny', \App\Models\Role::class);
-
-        $roles = $this->roleService->getAllRoles();
+        $this->authorize('view', \App\Models\Role::class);
+    
+        // Gunakan getRoles() agar filter/query builder diterapkan
+        $roles = $this->roleService->getRoles();
+    
         return $this->successResponse(RoleResource::collection($roles));
     }
+    
 
     public function show(int $id): JsonResponse
     {

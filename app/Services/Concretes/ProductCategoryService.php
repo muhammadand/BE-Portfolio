@@ -4,40 +4,38 @@ namespace App\Services\Concretes;
 
 use App\Models\ProductCategory;
 use App\Services\Contracts\ProductCategoryServiceInterface;
+use App\Repositories\ProductCategory\Contracts\ProductCategoryRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductCategoryService implements ProductCategoryServiceInterface
 {
-    public function getFilteredCategories(array $filters = [])
+    public function __construct(
+        protected readonly ProductCategoryRepositoryInterface $productCategoryRepository
+    ) {}
+
+    public function getFilteredCategories(): Collection
     {
-        $query = ProductCategory::query();
-
-        if (!empty($filters['name'])) {
-            $query->where('name', 'like', "%{$filters['name']}%");
-        }
-
-        return $query->get();
+        // panggil repository supaya filter/sort/include otomatis
+        return $this->productCategoryRepository->getProductCategories();
     }
 
     public function getCategoryById(int $id): ProductCategory
     {
-        return ProductCategory::findOrFail($id);
+        return $this->productCategoryRepository->find($id);
     }
 
     public function createCategory(array $data): ProductCategory
     {
-        return ProductCategory::create($data);
+        return $this->productCategoryRepository->create($data);
     }
 
     public function updateCategory(int $id, array $data): ProductCategory
     {
-        $category = ProductCategory::findOrFail($id);
-        $category->update($data);
-        return $category;
+        return $this->productCategoryRepository->update($id, $data);
     }
 
     public function deleteCategory(int $id): void
     {
-        $category = ProductCategory::findOrFail($id);
-        $category->delete();
+        $this->productCategoryRepository->delete($id);
     }
 }

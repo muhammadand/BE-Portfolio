@@ -3,10 +3,11 @@
 namespace App\Services\Contracts;
 
 use App\Models\ProductCategory;
+use Illuminate\Database\Eloquent\Collection;
 
 interface ProductCategoryServiceInterface
 {
-    public function getFilteredCategories(array $filters = []);
+    public function getFilteredCategories(): Collection;
 
     public function getCategoryById(int $id): ProductCategory;
 

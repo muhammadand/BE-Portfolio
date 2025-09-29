@@ -11,8 +11,8 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Traits\HasActivityLogs;
-
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property int $id
@@ -23,39 +23,11 @@ use App\Traits\HasActivityLogs;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property string|null $password_reset_token
- * @property string|null $password_reset_expires_at
- * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
- * @property-read int|null $notifications_count
- *
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordResetExpiresAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordResetToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
- *
- * @mixin Eloquent
  */
 class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
-    use HasActivityLogs;
+    use HasFactory, Notifiable, LogsActivity;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -63,21 +35,11 @@ class User extends Authenticatable implements JWTSubject
         'is_active',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -88,33 +50,42 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
+     * Konfigurasi Activity Log versi Spatie v5+
      */
-    public function getJWTIdentifier(): mixed
+    public function getActivitylogOptions(): LogOptions
     {
-        return $this->getKey();
+        return LogOptions::defaults()
+            ->logFillable()      // log semua field fillable
+            ->logOnlyDirty()     // hanya log kalau ada perubahan
+            ->useLogName('user'); // nama log
     }
 
     /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array<string, mixed>
+     * Pesan custom untuk setiap event
      */
-    public function getJWTCustomClaims(): array
+    public function getDescriptionForEvent(string $eventName): string
     {
-        return [];
+        return "User has been {$eventName}";
     }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
 
-
     public function getAllPermissionsAttribute()
-{
-    return $this->roles->flatMap(function ($role) {
-        return $role->permissions;
-    })->unique('id');
-}
+    {
+        return $this->roles->flatMap(fn($role) => $role->permissions)->unique('id');
+    }
 
+    // JWT methods
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
 }
