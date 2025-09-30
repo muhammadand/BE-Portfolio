@@ -62,8 +62,21 @@ class UserService extends BaseService implements UserServiceInterface
      */
     public function createUser(array $data): Model
     {
-        return $this->repository->create($data);
+        // Ambil roles kalau ada
+        $roles = $data['roles'] ?? [];
+        unset($data['roles']);
+    
+        // Buat user
+        $user = $this->repository->create($data);
+    
+        // Hubungkan role via pivot
+        if (!empty($roles)) {
+            $user->roles()->attach($roles);
+        }
+    
+        return $user->load('roles'); // biar response langsung ada relasi roles
     }
+    
 
     /**
      * Update user
