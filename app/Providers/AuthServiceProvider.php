@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         ProductCategory::class => ProductCategoryPolicy::class,
         Activity::class => ActivityPolicy::class,
+        \App\Models\Vendor::class => \App\Policies\VendorPolicy::class,
         // Tambahkan model lain & policy di sini jika perlu
     ];
 
