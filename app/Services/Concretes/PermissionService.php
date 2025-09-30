@@ -1,16 +1,33 @@
 <?php
+
 namespace App\Services\Concretes;
 
 use App\Models\Permission;
+use App\Repositories\Permission\Contracts\PermissionRepositoryInterface;
 use App\Services\Contracts\PermissionServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class PermissionService implements PermissionServiceInterface
 {
+    public function __construct(
+        protected readonly PermissionRepositoryInterface $permissionRepository
+    ) {}
+
+    /**
+     * Mengambil semua permission (mentah, tanpa filter).
+     */
     public function getAllPermissions(): Collection
     {
         return Permission::all();
+    }
+
+    /**
+     * Mengambil permissions dengan filter/sort/include
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissionRepository->getPermissions();
     }
 
     public function getPermissionById(int $id): ?Model
@@ -33,6 +50,7 @@ class PermissionService implements PermissionServiceInterface
             'name' => $data['name'],
             'slug' => $data['slug'],
         ]);
+
         return $permission;
     }
 

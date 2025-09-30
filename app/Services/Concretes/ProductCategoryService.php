@@ -4,43 +4,38 @@ namespace App\Services\Concretes;
 
 use App\Models\ProductCategory;
 use App\Services\Contracts\ProductCategoryServiceInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Repositories\ProductCategory\Contracts\ProductCategoryRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-use App\Services\Base\Concretes\BaseService;
-
-class ProductCategoryService extends BaseService implements ProductCategoryServiceInterface
+class ProductCategoryService implements ProductCategoryServiceInterface
 {
-    public function getFilteredCategories($request): LengthAwarePaginator
-    {
-        return ProductCategory::query()->paginate(15);
-    }
+    public function __construct(
+        protected readonly ProductCategoryRepositoryInterface $productCategoryRepository
+    ) {}
 
-    public function getAllCategories(): Collection
+    public function getFilteredCategories(): Collection
     {
-        return ProductCategory::all();
+        // panggil repository supaya filter/sort/include otomatis
+        return $this->productCategoryRepository->getProductCategories();
     }
 
     public function getCategoryById(int $id): ProductCategory
     {
-        return ProductCategory::findOrFail($id);
+        return $this->productCategoryRepository->find($id);
     }
 
     public function createCategory(array $data): ProductCategory
     {
-        return ProductCategory::create($data);
+        return $this->productCategoryRepository->create($data);
     }
 
     public function updateCategory(int $id, array $data): ProductCategory
     {
-        $category = ProductCategory::findOrFail($id);
-        $category->update($data);
-        return $category;
+        return $this->productCategoryRepository->update($id, $data);
     }
 
-    public function deleteCategory(int $id): bool
+    public function deleteCategory(int $id): void
     {
-        $category = ProductCategory::findOrFail($id);
-        return $category->delete();
+        $this->productCategoryRepository->delete($id);
     }
 }

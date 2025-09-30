@@ -8,7 +8,6 @@ use App\Http\Requests\Api\V1\UserUpdateRequest;
 use App\Http\Resources\Api\User\UserResource;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends BaseApiController
 {
@@ -16,21 +15,9 @@ class UserController extends BaseApiController
         protected readonly UserServiceInterface $userService
     ) {}
 
-    private function checkPermission(string $permission)
-    {
-        $user = Auth::user();
-
-        if (!$user || !$user->all_permissions->contains('slug', $permission)) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        return true;
-    }
-
     public function index(): JsonResponse
     {
-        $response = $this->checkPermission('view_users');
-        if ($response !== true) return $response;
+        $this->authorize('view', \App\Models\User::class);
 
         $users = $this->userService->getFilteredUsers(request());
 
@@ -39,8 +26,7 @@ class UserController extends BaseApiController
 
     public function all(): JsonResponse
     {
-        $response = $this->checkPermission('view_users');
-        if ($response !== true) return $response;
+        $this->authorize('view', \App\Models\User::class);
 
         $users = $this->userService->getAllUsers();
 
@@ -49,8 +35,7 @@ class UserController extends BaseApiController
 
     public function show(int $id): JsonResponse
     {
-        $response = $this->checkPermission('view_users');
-        if ($response !== true) return $response;
+        $this->authorize('view', \App\Models\User::class);
 
         $user = $this->userService->getUserById($id);
 
@@ -59,8 +44,7 @@ class UserController extends BaseApiController
 
     public function store(UserStoreRequest $request): JsonResponse
     {
-        $response = $this->checkPermission('create_users');
-        if ($response !== true) return $response;
+        $this->authorize('create', \App\Models\User::class);
 
         $user = $this->userService->createUser($request->validated());
 
@@ -69,8 +53,7 @@ class UserController extends BaseApiController
 
     public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
-        $response = $this->checkPermission('edit_users');
-        if ($response !== true) return $response;
+        $this->authorize('update', \App\Models\User::class);
 
         $user = $this->userService->updateUser($id, $request->validated());
 
@@ -79,8 +62,7 @@ class UserController extends BaseApiController
 
     public function destroy(int $id): JsonResponse
     {
-        $response = $this->checkPermission('delete_users');
-        if ($response !== true) return $response;
+        $this->authorize('delete', \App\Models\User::class);
 
         $this->userService->deleteUser($id);
 
@@ -89,8 +71,7 @@ class UserController extends BaseApiController
 
     public function active(): JsonResponse
     {
-        $response = $this->checkPermission('view_users');
-        if ($response !== true) return $response;
+        $this->authorize('view', \App\Models\User::class);
 
         $users = $this->userService->getActiveUsers();
 

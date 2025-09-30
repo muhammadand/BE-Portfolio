@@ -17,30 +17,43 @@ class PermissionController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        $permissions = $this->permissionService->getAllPermissions();
+        $this->authorize('viewAny', \App\Models\Permission::class);
+
+        $permissions = $this->permissionService->getPermissions();
+
         return $this->successResponse(PermissionResource::collection($permissions));
     }
 
     public function show(int $id): JsonResponse
     {
         $permission = $this->permissionService->getPermissionById($id);
+        $this->authorize('view', $permission);
+
         return $this->successResponse(new PermissionResource($permission));
     }
 
     public function store(PermissionStoreRequest $request): JsonResponse
     {
+        $this->authorize('create', \App\Models\Permission::class);
+
         $permission = $this->permissionService->createPermission($request->validated());
         return $this->createdResponse(new PermissionResource($permission));
     }
 
     public function update(PermissionUpdateRequest $request, int $id): JsonResponse
     {
+        $permission = $this->permissionService->getPermissionById($id);
+        $this->authorize('update', $permission);
+
         $permission = $this->permissionService->updatePermission($id, $request->validated());
         return $this->successResponse(new PermissionResource($permission));
     }
 
     public function destroy(int $id): JsonResponse
     {
+        $permission = $this->permissionService->getPermissionById($id);
+        $this->authorize('delete', $permission);
+
         $this->permissionService->deletePermission($id);
         return $this->noContentResponse();
     }

@@ -2,32 +2,53 @@
 
 namespace App\Services\Concretes;
 
-use App\Models\Role;
+use App\Repositories\Role\Contracts\RoleRepositoryInterface;
+use App\Services\Base\Concretes\BaseService;
 use App\Services\Contracts\RoleServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class RoleService implements RoleServiceInterface
+class RoleService extends BaseService implements RoleServiceInterface
 {
+    public function __construct(protected RoleRepositoryInterface $roleRepository)
+    {
+        $this->setRepository($roleRepository);
+    }
+
+    public function getRoles(): Collection
+    {
+        return $this->repository->getFiltered();
+    }
+
     public function getAllRoles(): Collection
     {
-        return Role::with('permissions')->get();
+        return $this->repository->all();
+    }
+
+    public function getFilteredRoles(?Request $request = null, int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->paginateFiltered($perPage);
     }
 
     public function getRoleById(int $id): ?Model
     {
-        return Role::with('permissions')->find($id);
+        try {
+            return $this->repository->findOrFail($id);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Role not found');
+        }
     }
 
     public function createRole(array $data): Model
     {
-        // Hanya ambil kolom 'name' dan 'slug' untuk create
-        $role = Role::create([
+        $role = $this->repository->create([
             'name' => $data['name'],
             'slug' => $data['slug'],
         ]);
 
-        // Sync permissions ke pivot table
         if (!empty($data['permissions'])) {
             $role->permissions()->sync($data['permissions']);
         }
@@ -37,27 +58,37 @@ class RoleService implements RoleServiceInterface
 
     public function updateRole(int $id, array $data): Model
     {
-        $role = Role::findOrFail($id);
-        $role->update([
-            'name' => $data['name'],
-            'slug' => $data['slug'],
-        ]);
+        try {
+            $role = $this->repository->update($id, [
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+            ]);
 
-        // Update pivot table
-        if (isset($data['permissions'])) {
-            $role->permissions()->sync($data['permissions']);
+            if (isset($data['permissions'])) {
+                $role->permissions()->sync($data['permissions']);
+            }
+
+            return $role;
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Role not found');
         }
-
-        return $role;
     }
 
     public function deleteRole(int $id): bool
     {
-        $role = Role::findOrFail($id);
+        try {
+            $role = $this->repository->findOrFail($id);
+            $role->permissions()->detach();
+            $this->repository->delete($id);
 
-        // Hapus semua relasi di pivot table
-        $role->permissions()->detach();
+            return true;
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Role not found');
+        }
+    }
 
-        return $role->delete();
+    public function getActiveRoles(): Collection
+    {
+        return $this->roleRepository->getActiveRoles();
     }
 }

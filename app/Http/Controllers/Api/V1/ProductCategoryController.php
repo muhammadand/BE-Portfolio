@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\BaseApiController;
@@ -7,7 +8,6 @@ use App\Http\Requests\Api\V1\ProductCategory\ProductCategoryUpdateRequest;
 use App\Http\Resources\Api\Category\ProductCategoryResource;
 use App\Services\Contracts\ProductCategoryServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class ProductCategoryController extends BaseApiController
 {
@@ -15,35 +15,18 @@ class ProductCategoryController extends BaseApiController
         protected readonly ProductCategoryServiceInterface $productCategoryService
     ) {}
 
-    private function checkPermission(string $permission)
-    {
-        $user = Auth::user();
-
-        if (!$user || !$user->all_permissions->contains('slug', $permission)) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        return true;
-    }
-
     public function index(): JsonResponse
     {
-        $response = $this->checkPermission('view_product_categories');
-        if ($response !== true) {
-            return $response;
-        }
+        $this->authorize('view', \App\Models\ProductCategory::class);
 
-        $categories = $this->productCategoryService->getFilteredCategories(request());
+        $categories = $this->productCategoryService->getFilteredCategories(request()->all());
 
         return $this->successResponse(ProductCategoryResource::collection($categories));
     }
 
     public function show(int $id): JsonResponse
     {
-        $response = $this->checkPermission('view_product_categories');
-        if ($response !== true) {
-            return $response;
-        }
+        $this->authorize('view', \App\Models\ProductCategory::class);
 
         $category = $this->productCategoryService->getCategoryById($id);
 
@@ -52,10 +35,7 @@ class ProductCategoryController extends BaseApiController
 
     public function store(ProductCategoryStoreRequest $request): JsonResponse
     {
-        $response = $this->checkPermission('create_product_categories');
-        if ($response !== true) {
-            return $response;
-        }
+        $this->authorize('create', \App\Models\ProductCategory::class);
 
         $category = $this->productCategoryService->createCategory($request->validated());
 
@@ -64,10 +44,7 @@ class ProductCategoryController extends BaseApiController
 
     public function update(ProductCategoryUpdateRequest $request, int $id): JsonResponse
     {
-        $response = $this->checkPermission('edit_product_categories');
-        if ($response !== true) {
-            return $response;
-        }
+        $this->authorize('update', \App\Models\ProductCategory::class);
 
         $category = $this->productCategoryService->updateCategory($id, $request->validated());
 
@@ -76,10 +53,7 @@ class ProductCategoryController extends BaseApiController
 
     public function destroy(int $id): JsonResponse
     {
-        $response = $this->checkPermission('delete_product_categories');
-        if ($response !== true) {
-            return $response;
-        }
+        $this->authorize('delete', \App\Models\ProductCategory::class);
 
         $this->productCategoryService->deleteCategory($id);
 

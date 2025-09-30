@@ -11,22 +11,34 @@ class UserRolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ambil role
-        $adminRole   = Role::where('slug', 'admin')->first();
-        $supportRole = Role::where('slug', 'support')->first();
-        $financeRole = Role::where('slug', 'finance')->first();
+        // 🔹 Pastikan role superadmin ada
+        $superAdminRole = Role::firstOrCreate(
+            ['slug' => 'superadmin'],
+            ['name' => 'Super Admin']
+        );
 
-        // Ambil user
+        $adminRole   = Role::firstOrCreate(['slug' => 'admin'], ['name' => 'Admin']);
+        $supportRole = Role::firstOrCreate(['slug' => 'support'], ['name' => 'Support']);
+        $financeRole = Role::firstOrCreate(['slug' => 'finance'], ['name' => 'Finance']);
+
+        // 🔹 Ambil user
         $superAdmin   = User::where('email', 'admin@gmail.com')->first();
         $muhammadAndi = User::where('email', 'muhammad.andi@gmail.com')->first();
         $rachmat      = User::where('email', 'rachmat@gmail.com')->first();
         $belva        = User::where('email', 'belva@gmail.com')->first();
 
-        // Assign roles
-        if ($superAdmin && $adminRole) {
-            $superAdmin->roles()->sync([$adminRole->id]);
+        // 🔹 Superadmin -> dapat semua permissions
+        if ($superAdmin) {
+            $superAdmin->roles()->sync([$superAdminRole->id]);
 
-            // Ambil permission untuk Users + Product Categories saja
+            $allPermissions = Permission::pluck('id')->toArray();
+            $superAdminRole->permissions()->sync($allPermissions);
+        }
+
+        // 🔹 Admin -> hanya Users & Categories
+        if ($muhammadAndi) {
+            $muhammadAndi->roles()->sync([$adminRole->id]);
+
             $permissions = Permission::whereIn('slug', [
                 'view_users',
                 'create_users',
@@ -42,14 +54,10 @@ class UserRolePermissionSeeder extends Seeder
             $adminRole->permissions()->sync($permissions);
         }
 
-        if ($muhammadAndi && $adminRole) {
-            $muhammadAndi->roles()->sync([$adminRole->id]);
-        }
-
-        if ($rachmat && $supportRole) {
+        // 🔹 Support -> hanya View Users
+        if ($rachmat) {
             $rachmat->roles()->sync([$supportRole->id]);
 
-            // Support hanya bisa View Users
             $viewUsers = Permission::firstOrCreate(
                 ['slug' => 'view_users'],
                 ['name' => 'View Users']
@@ -58,7 +66,8 @@ class UserRolePermissionSeeder extends Seeder
             $supportRole->permissions()->syncWithoutDetaching([$viewUsers->id]);
         }
 
-        if ($belva && $financeRole) {
+        // 🔹 Finance -> belum ada permissions khusus
+        if ($belva) {
             $belva->roles()->sync([$financeRole->id]);
         }
     }

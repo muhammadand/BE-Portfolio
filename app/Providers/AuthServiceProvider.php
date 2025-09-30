@@ -2,11 +2,26 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\ProductCategory;
+use App\Policies\ProductCategoryPolicy;
+use Spatie\Activitylog\Models\Activity;
+use App\Policies\ActivityPolicy;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
+    /**
+     * Map model ke policy-nya.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        ProductCategory::class => ProductCategoryPolicy::class,
+        Activity::class => ActivityPolicy::class,
+        // Tambahkan model lain & policy di sini jika perlu
+    ];
+
     /**
      * Register services.
      */
@@ -20,18 +35,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('is-admin', function ($user) {
-            return $user->role === 'admin';
-        });
+        // Daftarkan semua policy
+        $this->registerPolicies();
 
-        // Gate untuk 'support' role
-        Gate::define('is-support', function ($user) {
-            return $user->role === 'support';
-        });
-
-        // Gate untuk 'finance' role
-        Gate::define('is-finance', function ($user) {
-            return $user->role === 'finance';
-        });
+        // Jika ingin, bisa tetap definisikan Gates khusus role
+      
     }
 }
