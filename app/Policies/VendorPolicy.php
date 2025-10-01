@@ -31,4 +31,15 @@ class VendorPolicy
     {
         return $user->all_permissions->contains('slug', 'delete_vendors');
     }
+
+//     public function restore(User $user, Vendor $vendor): bool
+// {
+//     return $user->all_permissions->contains('slug', 'restore_vendors');
+// }
+
+// public function forceDelete(User $user, Vendor $vendor): bool
+// {
+//     return $user->all_permissions->contains('slug', 'force_delete_vendors');
+// }
+
 }

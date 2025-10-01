@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth; // ✅ penting
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
 class ProductCategory extends Model
 {
-    use LogsActivity;
+    use SoftDeletes, LogsActivity;
 
     protected $table = 'product_categories';
 
@@ -19,8 +21,36 @@ class ProductCategory extends Model
         'description',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
     ];
+
+    protected $dates = ['deleted_at'];
+
+    /**
+     * Event hooks untuk set created_by, updated_by, deleted_by
+     */
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->created_by = Auth::id();
+         
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->updated_by = Auth::id();
+            }
+        });
+
+        static::deleting(function ($model) {
+            if (Auth::check()) {
+                $model->deleted_by = Auth::id();
+                $model->save(); // simpan deleted_by sebelum soft delete dijalankan
+            }
+        });
+    }
 
     /**
      * Konfigurasi Activity Log versi Spatie v5+
@@ -28,8 +58,8 @@ class ProductCategory extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()          // otomatis log semua field fillable
-            ->logOnlyDirty()         // hanya log kalau ada perubahan
+            ->logFillable()
+            ->logOnlyDirty()
             ->useLogName('product_category');
     }
 

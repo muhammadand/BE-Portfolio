@@ -24,6 +24,10 @@ use App\Services\Contracts\VendorServiceInterface;
 use App\Services\Concretes\VendorService;
 use App\Repositories\Vendor\Contracts\VendorRepositoryInterface;
 use App\Repositories\Vendor\Concretes\VendorRepository;
+use App\Services\Contracts\ProductServiceInterface;
+use App\Services\Concretes\ProductService;
+use App\Repositories\Product\Contracts\ProductRepositoryInterface;
+use App\Repositories\Product\Concretes\ProductRepository;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+
+        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(ProductServiceInterface::class, ProductService::class);
 
         $this->app->bind(VendorServiceInterface::class, VendorService::class);
     $this->app->bind(VendorRepositoryInterface::class, VendorRepository::class);

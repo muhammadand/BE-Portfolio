@@ -26,37 +26,46 @@ class VendorController extends BaseApiController
 
     public function show(int $id): JsonResponse
     {
-        $this->authorize('view', \App\Models\Vendor::class);
-
         $vendor = $this->vendorService->getVendorById($id);
-
+    
+        $this->authorize('view', $vendor); // passing instance, bukan class
+    
         return $this->successResponse(new VendorResource($vendor));
     }
+    
 
     public function store(VendorStoreRequest $request): JsonResponse
     {
         $this->authorize('create', \App\Models\Vendor::class);
-
+    
         $vendor = $this->vendorService->createVendor($request->validated());
-
+    
         return $this->createdResponse(new VendorResource($vendor));
     }
-
+    
     public function update(VendorUpdateRequest $request, int $id): JsonResponse
     {
-        $this->authorize('update', \App\Models\Vendor::class);
-
+        // ambil dulu vendor
+        $vendor = $this->vendorService->getVendorById($id);
+    
+        // authorize pakai instance
+        $this->authorize('update', $vendor);
+    
+        // lanjut update
         $vendor = $this->vendorService->updateVendor($id, $request->validated());
-
+    
         return $this->successResponse(new VendorResource($vendor));
     }
-
+    
     public function destroy(int $id): JsonResponse
     {
-        $this->authorize('delete', \App\Models\Vendor::class);
-
+        $vendor = $this->vendorService->getVendorById($id);
+    
+        $this->authorize('delete', $vendor); // instance, bukan class
+    
         $this->vendorService->deleteVendor($id);
-
+    
         return $this->noContentResponse();
     }
+    
 }
