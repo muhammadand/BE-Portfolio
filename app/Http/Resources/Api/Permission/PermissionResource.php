@@ -10,6 +10,7 @@ class PermissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'group' => $this->group,
             'name' => $this->name,
             'slug' => $this->slug,
             'roles' => $this->roles->pluck('name'), // optional

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
+            $table->string('group')->nullable()->index();// ✅ kolom grup
             $table->string('name');
             $table->string('slug')->unique();
+
 
             // Kolom tracking user
             $table->unsignedBigInteger('created_by')->nullable();
@@ -22,6 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('deleted_by')->nullable();
 
             $table->timestamps(); // created_at & updated_at
+            $table->softDeletes(); // ✅ kalau mau pakai deleted_at
         });
     }
 

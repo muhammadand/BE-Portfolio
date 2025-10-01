@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ActivityLogController;
 use App\Http\Controllers\Api\V1\PermissionController;
+use App\Http\Controllers\Api\V1\VendorController;
+use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +56,9 @@ Route::middleware('auth:api')->group(function () {
 // Activity Logs
 Route::get('activity-logs', [ActivityLogController::class, 'index'])
     ->name('activity-logs.index');
+      // Vendors ✅
+      Route::apiResource('vendors', VendorController::class)->names('vendors');
+      Route::apiResource('products', ProductController::class)->names('products');
 
     
 });

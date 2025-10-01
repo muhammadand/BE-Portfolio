@@ -32,6 +32,8 @@ class UserUpdateRequest extends FormRequest
                 Rule::unique('users')->ignore($this->route('user')),
             ],
             'password' => ['sometimes', 'string', 'min:8'],
+            'roles' => ['sometimes', 'array'],              // <- tambahkan ini
+            'roles.*' => ['integer', 'exists:roles,id'],    // <- validasi setiap role
         ];
     }
 }

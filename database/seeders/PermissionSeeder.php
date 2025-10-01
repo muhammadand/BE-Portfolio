@@ -11,34 +11,49 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             // 🔹 Users
-            ['name' => 'View Users', 'slug' => 'view_users'],
-            ['name' => 'Create Users', 'slug' => 'create_users'],
-            ['name' => 'Edit Users', 'slug' => 'edit_users'],
-            ['name' => 'Delete Users', 'slug' => 'delete_users'],
+            ['name' => 'View Users', 'slug' => 'view_users', 'group' => 'Users'],
+            ['name' => 'Create Users', 'slug' => 'create_users', 'group' => 'Users'],
+            ['name' => 'Edit Users', 'slug' => 'edit_users', 'group' => 'Users'],
+            ['name' => 'Delete Users', 'slug' => 'delete_users', 'group' => 'Users'],
 
             // 🔹 Roles
-            ['name' => 'View Roles', 'slug' => 'view_roles'],
-            ['name' => 'Create Roles', 'slug' => 'create_roles'],
-            ['name' => 'Edit Roles', 'slug' => 'edit_roles'],
-            ['name' => 'Delete Roles', 'slug' => 'delete_roles'],
+            ['name' => 'View Roles', 'slug' => 'view_roles', 'group' => 'Roles'],
+            ['name' => 'Create Roles', 'slug' => 'create_roles', 'group' => 'Roles'],
+            ['name' => 'Edit Roles', 'slug' => 'edit_roles', 'group' => 'Roles'],
+            ['name' => 'Delete Roles', 'slug' => 'delete_roles', 'group' => 'Roles'],
 
             // 🔹 Permissions
-            ['name' => 'View Permissions', 'slug' => 'view_permissions'],
-            ['name' => 'Create Permissions', 'slug' => 'create_permissions'],
-            ['name' => 'Edit Permissions', 'slug' => 'edit_permissions'],
-            ['name' => 'Delete Permissions', 'slug' => 'delete_permissions'],
+            ['name' => 'View Permissions', 'slug' => 'view_permissions', 'group' => 'Permissions'],
+            ['name' => 'Create Permissions', 'slug' => 'create_permissions', 'group' => 'Permissions'],
+            ['name' => 'Edit Permissions', 'slug' => 'edit_permissions', 'group' => 'Permissions'],
+            ['name' => 'Delete Permissions', 'slug' => 'delete_permissions', 'group' => 'Permissions'],
 
             // 🔹 Product Categories
-            ['name' => 'View Product Categories', 'slug' => 'view_product_categories'],
-            ['name' => 'Create Product Categories', 'slug' => 'create_product_categories'],
-            ['name' => 'Edit Product Categories', 'slug' => 'edit_product_categories'],
-            ['name' => 'Delete Product Categories', 'slug' => 'delete_product_categories'],
+            ['name' => 'View Product Categories', 'slug' => 'view_product_categories', 'group' => 'Product Categories'],
+            ['name' => 'Create Product Categories', 'slug' => 'create_product_categories', 'group' => 'Product Categories'],
+            ['name' => 'Edit Product Categories', 'slug' => 'edit_product_categories', 'group' => 'Product Categories'],
+            ['name' => 'Delete Product Categories', 'slug' => 'delete_product_categories', 'group' => 'Product Categories'],
+
+            // 🔹 Vendors
+            ['name' => 'View Vendors', 'slug' => 'view_vendors', 'group' => 'Vendors'],
+            ['name' => 'Create Vendors', 'slug' => 'create_vendors', 'group' => 'Vendors'],
+            ['name' => 'Edit Vendors', 'slug' => 'edit_vendors', 'group' => 'Vendors'],
+            ['name' => 'Delete Vendors', 'slug' => 'delete_vendors', 'group' => 'Vendors'],
+
+            //Product
+            ['name' => 'View Products', 'slug' => 'view_products', 'group' => 'Products'],
+            ['name' => 'Create Products', 'slug' => 'create_products', 'group' => 'Products'],
+            ['name' => 'Edit Products', 'slug' => 'edit_products', 'group' => 'Products'],
+            ['name' => 'Delete Products', 'slug' => 'delete_products', 'group' => 'Products'],
         ];
 
         foreach ($permissions as $perm) {
             Permission::firstOrCreate(
-                ['slug' => $perm['slug']], // biar tidak duplikat
-                ['name' => $perm['name']]
+                ['slug' => $perm['slug']], // supaya tidak duplikat
+                [
+                    'name'  => $perm['name'],
+                    'group' => $perm['group'],
+                ]
             );
         }
     }

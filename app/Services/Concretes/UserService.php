@@ -84,11 +84,30 @@ class UserService extends BaseService implements UserServiceInterface
     public function updateUser(int $id, array $data): Model
     {
         try {
-            return $this->repository->update($id, $data);
+            // cek apakah request membawa roles
+            $hasRoles = array_key_exists('roles', $data);
+            $roles = $hasRoles ? $data['roles'] : [];
+            unset($data['roles']); // hapus roles dari data utama
+    
+            // update field user
+            $this->repository->update($id, $data);
+    
+            // ambil ulang user setelah update
+            $user = $this->repository->findOrFail($id);
+    
+            // update roles jika ada
+            if ($hasRoles) {
+                $user->roles()->sync($roles);
+            }
+    
+            // load roles agar tampil di JSON
+            return $user->load('roles');
+    
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('User not found');
         }
     }
+    
 
     /**
      * Delete user
