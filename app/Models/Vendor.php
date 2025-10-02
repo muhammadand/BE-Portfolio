@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Traits\Blameable;
 
 class Vendor extends Model
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes,Blameable;
 
     protected $fillable = [
         'name',
@@ -57,26 +58,6 @@ class Vendor extends Model
     /**
      * Events untuk mengisi created_by, updated_by, deleted_by
      */
-    protected static function booted()
-    {
-        static::creating(function ($vendor) {
-            if (Auth::check()) {
-                $vendor->created_by = Auth::id();
-          
-            }
-        });
-
-        static::updating(function ($vendor) {
-            if (Auth::check()) {
-                $vendor->updated_by = Auth::id();
-            }
-        });
-
-        static::deleting(function ($vendor) {
-            if (Auth::check()) {
-                $vendor->deleted_by = Auth::id();
-                $vendor->saveQuietly(); // supaya ga trigger event update lagi
-            }
-        });
-    }
+    
+    
 }

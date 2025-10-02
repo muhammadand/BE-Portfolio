@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth; // ✅ penting
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Traits\Blameable;
 
 class ProductCategory extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity,Blameable;
 
     protected $table = 'product_categories';
 
@@ -29,29 +30,7 @@ class ProductCategory extends Model
     /**
      * Event hooks untuk set created_by, updated_by, deleted_by
      */
-    protected static function booted()
-    {
-        static::creating(function ($model) {
-            if (Auth::check()) {
-                $model->created_by = Auth::id();
-         
-            }
-        });
-
-        static::updating(function ($model) {
-            if (Auth::check()) {
-                $model->updated_by = Auth::id();
-            }
-        });
-
-        static::deleting(function ($model) {
-            if (Auth::check()) {
-                $model->deleted_by = Auth::id();
-                $model->save(); // simpan deleted_by sebelum soft delete dijalankan
-            }
-        });
-    }
-
+    
     /**
      * Konfigurasi Activity Log versi Spatie v5+
      */
