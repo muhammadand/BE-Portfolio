@@ -46,33 +46,34 @@ class RoleService extends BaseService implements RoleServiceInterface
     {
         $role = $this->repository->create([
             'name' => $data['name'],
-            'slug' => $data['slug'],
+            // 'slug' => $data['slug'], // ❌ jangan diisi manual
         ]);
-
+    
         if (!empty($data['permissions'])) {
             $role->permissions()->sync($data['permissions']);
         }
-
+    
         return $role;
     }
-
+    
     public function updateRole(int $id, array $data): Model
     {
         try {
             $role = $this->repository->update($id, [
                 'name' => $data['name'],
-                'slug' => $data['slug'],
+                // 'slug' => $data['slug'], // ❌ hilangkan ini juga
             ]);
-
+    
             if (isset($data['permissions'])) {
                 $role->permissions()->sync($data['permissions']);
             }
-
+    
             return $role;
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Role not found');
         }
     }
+    
 
     public function deleteRole(int $id): bool
     {

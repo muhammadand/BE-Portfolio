@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\BaseApiController;
+use App\Http\Resources\Api\Activity\ActivityResource;
 use App\Repositories\ActivityLog\Contracts\ActivityRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
@@ -14,10 +15,11 @@ class ActivityLogController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        $filters = request()->only(['user_id', 'model', 'from', 'to', 'sort', 'include', 'fields']);
-
-        $logs = $this->activityRepo->getActivities($filters);
-
-        return $this->successResponse($logs);
+        $this->authorize('viewAny', \Spatie\Activitylog\Models\Activity::class);
+    
+        $logs = $this->activityRepo->paginateFiltered();
+    
+        return $this->successResponse(ActivityResource::collection($logs));
     }
+    
 }

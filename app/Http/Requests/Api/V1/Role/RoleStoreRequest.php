@@ -11,7 +11,7 @@ class RoleStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:roles,slug',
+            // 'slug' => 'required|string|max:255|unique:roles,slug',
             'permissions' => 'nullable|array',
             'permissions.*' => 'integer|exists:permissions,id',
         ];

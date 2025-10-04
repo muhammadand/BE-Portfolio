@@ -21,10 +21,10 @@ class ProductController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        // policy: viewAny
-        $this->authorize('viewAny', Product::class);
-
-        $products = $this->service->getProducts();
+        $this->authorize('viewAny', \App\Models\Product::class);
+    
+        $products = $this->service->getFilteredProducts(request());
+    
         return $this->successResponse(ProductResource::collection($products));
     }
 
