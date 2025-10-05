@@ -2,42 +2,22 @@
 
 namespace App\Repositories\ActivityLog\Concretes;
 
+use App\Repositories\Base\Concretes\QueryableRepository;
 use App\Repositories\ActivityLog\Contracts\ActivityRepositoryInterface;
 use Spatie\Activitylog\Models\Activity;
-use Illuminate\Database\Eloquent\Collection;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Collection;
 
-class ActivityRepository implements ActivityRepositoryInterface
+class ActivityRepository extends QueryableRepository implements ActivityRepositoryInterface
 {
     protected function model(): string
     {
         return Activity::class;
     }
 
-    public function getActivities(array $filters = []): Collection
+    public function getActivities(): Collection
     {
-        $query = QueryBuilder::for($this->model())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedIncludes($this->getAllowedIncludes())
-            ->latest();
-
-        // Tambahan filter manual dari array $filters
-        if (!empty($filters['user_id'])) {
-            $query->where('causer_id', $filters['user_id']);
-        }
-        if (!empty($filters['model'])) {
-            $query->where('subject_type', $filters['model']);
-        }
-        if (!empty($filters['from'])) {
-            $query->whereDate('created_at', '>=', $filters['from']);
-        }
-        if (!empty($filters['to'])) {
-            $query->whereDate('created_at', '<=', $filters['to']);
-        }
-
-        return $query->get();
+        return $this->getFiltered();
     }
 
     public function getAllowedFilters(): array
@@ -50,6 +30,18 @@ class ActivityRepository implements ActivityRepositoryInterface
             'log_name',
             'description',
             'event',
+            AllowedFilter::callback('date_range', function ($query, $value) {
+                if (isset($value['from']) && isset($value['to'])) {
+                    $query->whereBetween('created_at', [
+                        $value['from'] . ' 00:00:00',
+                        $value['to']   . ' 23:59:59'
+                    ]);
+                } elseif (isset($value['from'])) {
+                    $query->where('created_at', '>=', $value['from'] . ' 00:00:00');
+                } elseif (isset($value['to'])) {
+                    $query->where('created_at', '<=', $value['to'] . ' 23:59:59');
+                }
+            }),
         ];
     }
 
@@ -65,6 +57,16 @@ class ActivityRepository implements ActivityRepositoryInterface
 
     public function getAllowedFields(): array
     {
-        return ['id', 'log_name', 'description', 'subject_type', 'subject_id', 'causer_id', 'properties', 'created_at', 'updated_at'];
+        return [
+            'id',
+            'log_name',
+            'description',
+            'subject_type',
+            'subject_id',
+            'causer_id',
+            'properties',
+            'created_at',
+            'updated_at'
+        ];
     }
 }

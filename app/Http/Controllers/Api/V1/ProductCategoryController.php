@@ -16,13 +16,14 @@ class ProductCategoryController extends BaseApiController
     ) {}
 
     public function index(): JsonResponse
-    {
-        $this->authorize('view', \App\Models\ProductCategory::class);
+{
+    $this->authorize('view', \App\Models\ProductCategory::class);
 
-        $categories = $this->productCategoryService->getFilteredCategories(request()->all());
+    $categories = $this->productCategoryService->getFilteredCategories(request());
 
-        return $this->successResponse(ProductCategoryResource::collection($categories));
-    }
+    return $this->successResponse(ProductCategoryResource::collection($categories));
+}
+
 
     public function show(int $id): JsonResponse
     {

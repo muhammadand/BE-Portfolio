@@ -2,18 +2,24 @@
 
 namespace App\Services\Contracts;
 
-use App\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductCategoryServiceInterface
 {
-    public function getFilteredCategories(): Collection;
+    public function getCategories(): Collection;
 
-    public function getCategoryById(int $id): ProductCategory;
+    public function getAllCategories(): Collection;
 
-    public function createCategory(array $data): ProductCategory;
+    public function getFilteredCategories(?Request $request = null, int $perPage = 15): LengthAwarePaginator;
 
-    public function updateCategory(int $id, array $data): ProductCategory;
+    public function getCategoryById(int $id): ?Model;
 
-    public function deleteCategory(int $id): void;
+    public function createCategory(array $data): Model;
+
+    public function updateCategory(int $id, array $data): Model;
+
+    public function deleteCategory(int $id): bool;
 }
