@@ -24,6 +24,7 @@ class PermissionRepository extends QueryableRepository implements PermissionRepo
     {
         return [
             AllowedFilter::exact('id'),
+            'group',
             'name',
             'slug',
         ];
@@ -31,7 +32,7 @@ class PermissionRepository extends QueryableRepository implements PermissionRepo
 
     public function getAllowedSorts(): array
     {
-        return ['id', 'name', 'slug'];
+        return ['id',  'group', 'name', 'slug'];
     }
 
     public function getAllowedIncludes(): array
@@ -41,6 +42,6 @@ class PermissionRepository extends QueryableRepository implements PermissionRepo
 
     public function getAllowedFields(): array
     {
-        return ['id', 'name', 'slug'];
+        return ['id',   'group','name', 'slug'];
     }
 }

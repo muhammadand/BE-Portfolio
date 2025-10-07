@@ -19,6 +19,8 @@ class CreateProductRequest extends FormRequest
             'category_id' => 'required|exists:product_categories,id',
             'vendor_id'   => 'required|exists:vendors,id',
             'vendor_sku'  => 'required|string|max:100',
+            'sku'         => 'nullable|string|max:100|unique:products,sku',
+            'days'        => 'nullable|integer|min:0',
             'price'       => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'is_active'   => 'boolean',

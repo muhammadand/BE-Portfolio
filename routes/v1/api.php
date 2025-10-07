@@ -8,8 +8,8 @@ use App\Http\Controllers\Api\V1\ActivityLogController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\VendorController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\EnumerationController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API V1 Routes
@@ -59,6 +59,12 @@ Route::get('activity-logs', [ActivityLogController::class, 'index'])
       // Vendors ✅
       Route::apiResource('vendors', VendorController::class)->names('vendors');
       Route::apiResource('products', ProductController::class)->names('products');
+    
+  // ✅ Import Products via Google Spreadsheet
+  Route::post('products/import/spreadsheet', [ProductController::class, 'importFromSpreadsheet'])
+  ->name('products.import.spreadsheet');
+  Route::apiResource('enumerations', EnumerationController::class)
+  ->names('enumerations');
 
     
 });

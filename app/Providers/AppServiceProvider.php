@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use App\Services\Contracts\ProductCategoryServiceInterface;
 use App\Services\Concretes\ProductCategoryService;
 use App\Services\Contracts\RoleServiceInterface;
@@ -28,6 +29,10 @@ use App\Services\Contracts\ProductServiceInterface;
 use App\Services\Concretes\ProductService;
 use App\Repositories\Product\Contracts\ProductRepositoryInterface;
 use App\Repositories\Product\Concretes\ProductRepository;
+use App\Repositories\Enumeration\Contracts\EnumerationRepositoryInterface;
+use App\Repositories\Enumeration\Concretes\EnumerationRepository;
+use App\Services\Contracts\EnumerationServiceInterface;
+use App\Services\Concretes\EnumerationService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -37,18 +42,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
+        // Enumeration
+        $this->app->bind(EnumerationRepositoryInterface::class, EnumerationRepository::class);
+        $this->app->bind(EnumerationServiceInterface::class, EnumerationService::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
-
         $this->app->bind(VendorServiceInterface::class, VendorService::class);
-    $this->app->bind(VendorRepositoryInterface::class, VendorRepository::class);
+        $this->app->bind(VendorRepositoryInterface::class, VendorRepository::class);
         $this->app->bind(
             ActivityRepositoryInterface::class,
             ActivityRepository::class
         );
 
-       
+
         $this->app->bind(
             \App\Repositories\ProductCategory\Contracts\ProductCategoryRepositoryInterface::class,
             \App\Repositories\ProductCategory\Concretes\ProductCategoryRepository::class
@@ -63,11 +69,11 @@ class AppServiceProvider extends ServiceProvider
             PermissionRepositoryInterface::class,
             PermissionRepository::class
         );
-        
+
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
         $this->app->bind(PermissionServiceInterface::class, PermissionService::class);
         // Bind interface ke implementasinya
-          $this->app->bind(ProductCategoryServiceInterface::class, ProductCategoryService::class);
+        $this->app->bind(ProductCategoryServiceInterface::class, ProductCategoryService::class);
         if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);

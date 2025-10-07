@@ -9,21 +9,15 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Traits\Blameable;
 
-class Product extends Model
+class Customer extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes, Blameable;
 
     protected $fillable = [
         'name',
-        'slug',
-        'category_id',
-        'vendor_id',
-        'vendor_sku',
-        'price',
-        'description',
-        'is_active',
-        'sku',
-        'days',
+        'email',
+        'phone',
+        'channel_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -31,26 +25,30 @@ class Product extends Model
 
     protected $dates = ['deleted_at'];
 
+    /**
+     * Log activity settings (Spatie Activity Log)
+     */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logFillable()
             ->logOnlyDirty()
-            ->useLogName('product');
+            ->useLogName('customer');
     }
 
+    /**
+     * Description for activity events
+     */
     public function getDescriptionForEvent(string $eventName): string
     {
-        return "Product has been {$eventName}";
+        return "Customer has been {$eventName}";
     }
 
-    public function category()
+    /**
+     * Relationship to Enumeration (for channel)
+     */
+    public function channel()
     {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
-    }
-
-    public function vendor()
-    {
-        return $this->belongsTo(Vendor::class, 'vendor_id');
+        return $this->belongsTo(Enumeration::class, 'channel_id');
     }
 }

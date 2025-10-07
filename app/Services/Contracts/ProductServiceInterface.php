@@ -24,4 +24,13 @@ interface ProductServiceInterface
     public function deleteProduct(int $id): bool;
 
     public function getActiveProducts(): Collection;
+
+        /**
+     * Import products from Google Spreadsheet.
+     *
+     * @param string $spreadsheetId
+     * @param string|null $range
+     * @return \Illuminate\Support\Collection
+     */
+    public function importFromSpreadsheet(string $spreadsheetId, string $range = 'MM!A1:F10'): \Illuminate\Support\Collection;
 }

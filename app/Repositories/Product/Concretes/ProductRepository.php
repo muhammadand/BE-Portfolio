@@ -7,9 +7,12 @@ use App\Repositories\Base\Concretes\QueryableRepository;
 use App\Repositories\Product\Contracts\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
+use App\Services\Concretes\GoogleSheetService; // <— tambahkan ini
 
 class ProductRepository extends QueryableRepository implements ProductRepositoryInterface
 {
+
+
     /**
      * Tentukan model utama
      */
@@ -17,6 +20,7 @@ class ProductRepository extends QueryableRepository implements ProductRepository
     {
         return Product::class;
     }
+   
 
     /**
      * Ambil semua produk dengan filter
@@ -46,6 +50,8 @@ class ProductRepository extends QueryableRepository implements ProductRepository
             AllowedFilter::exact('category_id'),
             AllowedFilter::exact('vendor_id'),
             'vendor_sku',
+            'sku',
+            'days',
             AllowedFilter::scope('price_min'),
             AllowedFilter::scope('price_max'),
             AllowedFilter::exact('is_active'),
@@ -83,6 +89,8 @@ class ProductRepository extends QueryableRepository implements ProductRepository
             'category_id',
             'vendor_id',
             'vendor_sku',
+            'sku',
+            'days',
             'price',
             'description',
             'is_active',

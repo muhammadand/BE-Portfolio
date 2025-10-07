@@ -38,6 +38,7 @@ class PermissionService implements PermissionServiceInterface
     public function createPermission(array $data): Model
     {
         return Permission::create([
+            'group' => $data['group'],
             'name' => $data['name'],
             'slug' => $data['slug'],
         ]);
@@ -47,6 +48,7 @@ class PermissionService implements PermissionServiceInterface
     {
         $permission = Permission::findOrFail($id);
         $permission->update([
+            'group' => $data['group'],
             'name' => $data['name'],
             'slug' => $data['slug'],
         ]);

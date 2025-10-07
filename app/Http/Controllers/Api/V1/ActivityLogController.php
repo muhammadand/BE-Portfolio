@@ -15,7 +15,7 @@ class ActivityLogController extends BaseApiController
 
     public function index(): JsonResponse
     {
-        $this->authorize('viewAny', \Spatie\Activitylog\Models\Activity::class);
+        // $this->authorize('viewAny', \Spatie\Activitylog\Models\Activity::class);
     
         $logs = $this->activityRepo->paginateFiltered();
     

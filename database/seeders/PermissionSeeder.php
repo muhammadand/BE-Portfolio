@@ -45,6 +45,13 @@ class PermissionSeeder extends Seeder
             ['name' => 'Create Products', 'slug' => 'create_products', 'group' => 'Products'],
             ['name' => 'Edit Products', 'slug' => 'edit_products', 'group' => 'Products'],
             ['name' => 'Delete Products', 'slug' => 'delete_products', 'group' => 'Products'],
+
+            // Enumeration
+            ['name' => 'View Enumerations', 'slug' => 'view_enumerations', 'group' => 'Enumerations'],
+            ['name' => 'Create Enumerations', 'slug' => 'create_enumerations', 'grouii p' => 'Enumerations'],
+            ['name' => 'Edit Enumerations', 'slug' => 'edit_enumerations', 'group' => 'Enumerations'],
+            ['name' => 'Delete Enumerations', 'slug' => 'delete_enumerations', 'group' => 'Enumerations'],
+
         ];
 
         foreach ($permissions as $perm) {
