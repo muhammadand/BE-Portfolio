@@ -48,7 +48,7 @@ class PermissionSeeder extends Seeder
 
             // Enumeration
             ['name' => 'View Enumerations', 'slug' => 'view_enumerations', 'group' => 'Enumerations'],
-            ['name' => 'Create Enumerations', 'slug' => 'create_enumerations', 'grouii p' => 'Enumerations'],
+            ['name' => 'Create Enumerations', 'slug' => 'create_enumerations', 'group' => 'Enumerations'],
             ['name' => 'Edit Enumerations', 'slug' => 'edit_enumerations', 'group' => 'Enumerations'],
             ['name' => 'Delete Enumerations', 'slug' => 'delete_enumerations', 'group' => 'Enumerations'],
 

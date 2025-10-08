@@ -114,7 +114,12 @@ class ProductService extends BaseService implements ProductServiceInterface
     
             $data = @array_combine($header, $row);
             if (!$data || empty(trim($data['nama produk'] ?? ''))) continue;
-    
+            $sku = trim($data['sku'] ?? '');
+            $name = trim($data['nama produk'] ?? '');
+            if (!empty($sku) && \App\Models\Product::where('sku', $sku)->exists()) {
+                \Log::info("⚠️ Produk duplikat dilewati (SKU sudah ada)", ['sku' => $sku, 'name' => $name]);
+                continue;
+            }
             $slugBase = \Str::slug($data['nama produk']);
             $slug = $slugBase;
             $counter = 1;
