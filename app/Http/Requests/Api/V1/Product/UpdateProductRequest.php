@@ -21,6 +21,8 @@ class UpdateProductRequest extends FormRequest
             'category_id' => 'sometimes|exists:product_categories,id',
             'vendor_id'   => 'sometimes|exists:vendors,id',
             'vendor_sku'  => 'sometimes|string|max:100',
+            'sku'         => "sometimes|string|max:100|unique:products,sku,{$productId}",
+            'days'        => 'sometimes|integer|min:0',
             'price'       => 'sometimes|numeric|min:0',
             'description' => 'nullable|string',
             'is_active'   => 'boolean',

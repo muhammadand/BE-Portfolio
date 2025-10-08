@@ -15,9 +15,11 @@ class DatabaseSeeder extends Seeder
         // Run the test users seeder for query builder testing
         $this->call([
             RoleSeeder::class,
-        PermissionSeeder::class,
-        UserSeeder::class,
-        UserRolePermissionSeeder::class, 
+            PermissionSeeder::class,
+            UserSeeder::class,
+            UserRolePermissionSeeder::class, 
+            ProductCategorySeeder::class,
+            VendorSeeder::class
         ]);
     }
 }

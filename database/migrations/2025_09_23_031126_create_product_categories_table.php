@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->json('created_by')->nullable();
             $table->json('updated_by')->nullable();
             $table->json('deleted_by')->nullable();
-
             $table->foreign('parent_id')->references('id')->on('product_categories')->onDelete('set null');
         });
     }
