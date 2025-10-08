@@ -33,6 +33,10 @@ use App\Repositories\Enumeration\Contracts\EnumerationRepositoryInterface;
 use App\Repositories\Enumeration\Concretes\EnumerationRepository;
 use App\Services\Contracts\EnumerationServiceInterface;
 use App\Services\Concretes\EnumerationService;
+use App\Repositories\Customer\Contracts\CustomerRepositoryInterface;
+use App\Repositories\Customer\Concretes\CustomerRepository;
+use App\Services\Contracts\CustomerServiceInterface;
+use App\Services\Concretes\CustomerService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -42,19 +46,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        //Customer
+        $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
+        $this->app->bind(CustomerServiceInterface::class, CustomerService::class);
         // Enumeration
         $this->app->bind(EnumerationRepositoryInterface::class, EnumerationRepository::class);
         $this->app->bind(EnumerationServiceInterface::class, EnumerationService::class);
+        //Product
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
+        //Vendor
         $this->app->bind(VendorServiceInterface::class, VendorService::class);
         $this->app->bind(VendorRepositoryInterface::class, VendorRepository::class);
+        //Activity Logs
         $this->app->bind(
             ActivityRepositoryInterface::class,
             ActivityRepository::class
         );
-
-
+        //Product Category
         $this->app->bind(
             \App\Repositories\ProductCategory\Contracts\ProductCategoryRepositoryInterface::class,
             \App\Repositories\ProductCategory\Concretes\ProductCategoryRepository::class

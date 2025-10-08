@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\VendorController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\EnumerationController;
+use App\Http\Controllers\Api\V1\CustomerController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,7 @@ Route::get('activity-logs', [ActivityLogController::class, 'index'])
   ->name('products.import.spreadsheet');
   Route::apiResource('enumerations', EnumerationController::class)
   ->names('enumerations');
+  Route::apiResource('customers', CustomerController::class)->names('customers');
 
     
 });
