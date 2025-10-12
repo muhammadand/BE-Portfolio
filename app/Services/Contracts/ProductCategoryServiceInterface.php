@@ -22,4 +22,7 @@ interface ProductCategoryServiceInterface
     public function updateCategory(int $id, array $data): Model;
 
     public function deleteCategory(int $id): bool;
+    public function syncToSpreadsheet(): bool;
+
+
 }

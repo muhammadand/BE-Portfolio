@@ -67,5 +67,17 @@ class VendorController extends BaseApiController
     
         return $this->noContentResponse();
     }
+
+    public function sync(): JsonResponse
+    {
+        // $this->authorize('sync', \App\Models\Vendor::class); // optional, buat policy sync
+
+        try {
+            $this->vendorService->syncToSpreadsheet();
+            return $this->successResponse(['message' => 'Sinkronisasi vendor ke Google Sheet berhasil.']);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
     
 }

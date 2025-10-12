@@ -23,41 +23,34 @@ class ProductController extends BaseApiController
         $this->service = $service;
     }
 
-    // public function importFromSpreadsheet(ImportFromSpreadsheetRequest $request): JsonResponse
-    // {
-    //     $spreadsheetId = $request->input('spreadsheet_id');
-    //     $range = $request->input('range', 'MM!A1:F10');
-    //     try {
-    //         $sheetService = new GoogleSheetService($spreadsheetId);
-    //         $rows = $sheetService->getSheetData($range);
-    //         if (empty($rows)) {
-    //             return response()->json(['message' => 'Data kosong atau tidak ditemukan pada range yang diberikan.', 'spreadsheet_id' => $spreadsheetId, 'range' => $range, 'rows_count' => 0, 'rows' => [],]);
-    //         }
-    //         return response()->json(['message' => 'Data berhasil diambil dari Google Sheet.', 'spreadsheet_id' => $spreadsheetId, 'range' => $range, 'rows_count' => count($rows), 'rows' => $rows,]);
-    //     } catch (\Throwable $e) {
-    //         \Log::error('Gagal membaca data dari Google Sheet', ['error' => $e->getMessage(), 'spreadsheet_id' => $spreadsheetId, 'range' => $range,]);
-    //         return response()->json(['error' => 'Gagal membaca data dari Google Sheet', 'message' => $e->getMessage(),], 500);
-    //     }
-    // }
 
 
-    public function importFromSpreadsheet(ImportFromSpreadsheetRequest $request): JsonResponse
+
+    public function importFromSpreadsheet(): JsonResponse
     {
-        $spreadsheetId = $request->input('spreadsheet_id');
-        $range = $request->input('range', 'FM!A1:F100');
+        // Ambil dari .env
+        $spreadsheetId = env('GOOGLE_SHEET_ID');
+        $range = env('GOOGLE_SHEET_RANGE', 'Upload!A3:G'); // default kalau env kosong
     
         try {
-            $products = $this->service->importFromSpreadsheet($spreadsheetId, $range);
-            return $this->createdResponse(
-                ProductResource::collection($products),
-                'Data produk berhasil diimport dari Google Sheet.'
-            );
+            $result = $this->service->importFromSpreadsheet($spreadsheetId, $range);
+            $created = $result['created'];
+            $skipped = $result['skipped'];
+    
+            return response()->json([
+                'message' => 'Data produk berhasil diimport dari Google Sheet.',
+                'total_created' => $created->count(),
+                'total_skipped' => $skipped->count(),
+                'skipped_items' => $skipped,
+                'data' => ProductResource::collection($created),
+            ], 201);
         } catch (\Throwable $e) {
             \Log::error('Gagal import data produk', [
                 'error' => $e->getMessage(),
                 'spreadsheet_id' => $spreadsheetId,
                 'range' => $range,
             ]);
+    
             return $this->errorResponse('Gagal import data produk: ' . $e->getMessage(), 500);
         }
     }

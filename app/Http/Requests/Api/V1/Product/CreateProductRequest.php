@@ -15,7 +15,7 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name'        => 'required|string|max:255',
-            'slug'        => 'required|string|max:255|unique:products,slug',
+            'slug'        => 'nullable|string|max:255|unique:products,slug',
             'category_id' => 'required|exists:product_categories,id',
             'vendor_id'   => 'required|exists:vendors,id',
             'vendor_sku'  => 'required|string|max:100',
