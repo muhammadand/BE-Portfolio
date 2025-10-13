@@ -60,4 +60,18 @@ class ProductCategoryController extends BaseApiController
 
         return $this->noContentResponse();
     }
+    public function syncToSpreadsheet(): JsonResponse
+    {
+        $this->authorize('view', \App\Models\ProductCategory::class);
+    
+        $this->productCategoryService->syncToSpreadsheet();
+    
+        return $this->successResponse([
+            'message' => 'Data kategori berhasil disinkronkan ke Google Spreadsheet.',
+        ]);
+    }
+    
+
+
+    
 }

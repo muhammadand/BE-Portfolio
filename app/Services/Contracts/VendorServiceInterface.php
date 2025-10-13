@@ -15,5 +15,12 @@ interface VendorServiceInterface
 
     public function updateVendor(int $id, array $data): Model;
 
+    /**
+     * Sinkronisasi semua vendor ke Google Spreadsheet
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function syncToSpreadsheet(): bool;
     public function deleteVendor(int $id): bool;
 }

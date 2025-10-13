@@ -64,6 +64,14 @@ Route::get('activity-logs', [ActivityLogController::class, 'index'])
   // ✅ Import Products via Google Spreadsheet
   Route::post('products/import/spreadsheet', [ProductController::class, 'importFromSpreadsheet'])
   ->name('products.import.spreadsheet');
+  
+  Route::post('product-categories/sync', [ProductCategoryController::class, 'syncToSpreadsheet'])
+  ->name('product-categories.sync');
+  Route::post('vendors/sync', [VendorController::class, 'sync'])->name('vendors.sync');
+
+
+
+
   Route::apiResource('enumerations', EnumerationController::class)
   ->names('enumerations');
   Route::apiResource('customers', CustomerController::class)->names('customers');

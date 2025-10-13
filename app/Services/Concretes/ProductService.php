@@ -46,35 +46,36 @@ class ProductService extends BaseService implements ProductServiceInterface
 
     public function createProduct(array $data): Model
     {
-        return $this->repository->create([
-            'name'        => $data['name'],
-            'slug'        => $data['slug'],
-            'category_id' => $data['category_id'],
-            'vendor_id'   => $data['vendor_id'],
-            'vendor_sku'  => $data['vendor_sku'],
-            'sku'  => $data['sku'],
-            'days'  => $data['days'],
-            'price'       => $data['price'],
-            'description' => $data['description'] ?? null,
-            'is_active'   => $data['is_active'] ?? true,
-        ]);
+        // Kalau slug kosong atau "null" string → generate otomatis
+        if (empty($data['slug']) || $data['slug'] === 'null') {
+            $data['slug'] = $this->generateUniqueSlug($data['name']);
+        }
+    
+        return $this->repository->create($data);
     }
+    
+    protected function generateUniqueSlug(string $name): string
+    {
+        $slugBase = \Str::slug($name);
+        $slug = $slugBase;
+        $counter = 1;
+    
+        while (\App\Models\Product::where('slug', $slug)->exists()) {
+            $slug = "{$slugBase}-{$counter}";
+            $counter++;
+        }
+    
+        return $slug;
+    }
+    
+
 
     public function updateProduct(int $id, array $data): Model
     {
+        $data['slug'] = $data['slug'] ?? \Str::slug($data['name']);
+    
         try {
-            return $this->repository->update($id, [
-                'name'        => $data['name'],
-                'slug'        => $data['slug'],
-                'category_id' => $data['category_id'],
-                'vendor_id'   => $data['vendor_id'],
-                'vendor_sku'  => $data['vendor_sku'],
-                'sku'  => $data['sku'],
-                'days'  => $data['days'],
-                'price'       => $data['price'],
-                'description' => $data['description'] ?? null,
-                'is_active'   => $data['is_active'] ?? true,
-            ]);
+            return $this->repository->update($id, $data);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Product not found');
         }
@@ -96,6 +97,7 @@ class ProductService extends BaseService implements ProductServiceInterface
     }
 
     public function importFromSpreadsheet(string $spreadsheetId, string $range = 'FM!A1:F100'): \Illuminate\Support\Collection
+
     {
         $sheetService = new \App\Services\Concretes\GoogleSheetService($spreadsheetId);
         $rows = $sheetService->getSheetData($range);
@@ -106,21 +108,32 @@ class ProductService extends BaseService implements ProductServiceInterface
     
         $header = array_map(fn($h) => strtolower(trim($h)), array_shift($rows));
         $rows = array_filter($rows, fn($r) => array_filter($r));
-        $created = collect();
     
-        foreach ($rows as $index => $row) {
+        $created = collect();
+        $skipped = collect();
+    
+        foreach ($rows as $row) {
             if (count($row) < count($header)) $row = array_pad($row, count($header), null);
             if (count($row) > count($header)) $row = array_slice($row, 0, count($header));
     
             $data = @array_combine($header, $row);
             if (!$data || empty(trim($data['nama produk'] ?? ''))) continue;
+    
             $sku = trim($data['sku'] ?? '');
             $name = trim($data['nama produk'] ?? '');
+    
+            // Cek SKU duplikat
             if (!empty($sku) && \App\Models\Product::where('sku', $sku)->exists()) {
-                \Log::info("⚠️ Produk duplikat dilewati (SKU sudah ada)", ['sku' => $sku, 'name' => $name]);
+                $skipped->push([
+                    'sku' => $sku,
+                    'name' => $name,
+                    'reason' => 'SKU sudah ada di database',
+                ]);
                 continue;
             }
-            $slugBase = \Str::slug($data['nama produk']);
+    
+            // Buat slug unik
+            $slugBase = \Str::slug($name);
             $slug = $slugBase;
             $counter = 1;
             while (\App\Models\Product::where('slug', $slug)->exists()) {
@@ -129,10 +142,10 @@ class ProductService extends BaseService implements ProductServiceInterface
             }
     
             $product = $this->createProduct([
-                'name' => $data['nama produk'],
+                'name' => $name,
                 'slug' => $slug,
-                'sku' => $data['sku'] ?? null,
-                'vendor_sku' => $data['vendor_sku'] ?? $data['sku'] ?? $slug,
+                'sku' => $sku ?: null,
+                'vendor_sku' => $data['vendor_sku'] ?? $sku ?? $slug,
                 'price' => is_numeric($data['price'] ?? null) ? (float)$data['price'] : 0,
                 'days' => is_numeric($data['days'] ?? null) ? (int)$data['days'] : 0,
                 'description' => $data['description'] ?? null,
@@ -140,12 +153,14 @@ class ProductService extends BaseService implements ProductServiceInterface
                 'vendor_id' => $this->resolveVendorId($data['vendor'] ?? null),
                 'is_active' => true,
             ]);
-            
     
             $created->push($product);
         }
     
-        return $created;
+        return collect([
+            'created' => $created,
+            'skipped' => $skipped,
+        ]);
     }
     
 
