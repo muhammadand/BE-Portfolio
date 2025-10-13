@@ -7,6 +7,8 @@ use App\Models\ProductCategory;
 use App\Policies\ProductCategoryPolicy;
 use Spatie\Activitylog\Models\Activity;
 use App\Policies\ActivityPolicy;
+use App\Models\Customer;
+use App\Policies\CustomerPolicy;
 
 
 class AuthServiceProvider extends ServiceProvider
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         Activity::class => ActivityPolicy::class,
         \App\Models\Vendor::class => \App\Policies\VendorPolicy::class,
         \App\Models\Product::class => \App\Policies\ProductPolicy::class,
+        Customer::class => CustomerPolicy::class,
         // Tambahkan model lain & policy di sini jika perlu
     ];
 
